@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartAid - Emergency Health & Disaster Reporting</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #eee;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2c2c2c;
+      padding: 1rem 2rem;
+      text-align: center;
+      color: #c792ea;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 2rem;
+    }
+
+    .form-section {
+      background: #2a2a2a;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .form-section h2 {
+      color: #bb86fc;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    select, textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #444;
+      color: #eee;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #bb86fc;
+      border: none;
+      color: #1e1e1e;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #9a68d1;
+    }
+
+    .report-board {
+      background: #2a2a2a;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .report {
+      background: #333;
+      padding: 0.75rem;
+      border-left: 5px solid #bb86fc;
+      margin-bottom: 1rem;
+    }
+
+    .hotlines {
+      background: #2a2a2a;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+    }
+
+    .hotlines h2 {
+      color: #bb86fc;
+    }
+
+    .hotlines ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .hotlines li {
+      margin: 0.5rem 0;
+    }
+
+    .hotlines a {
+      color: #bb86fc;
+      text-decoration: none;
+    }
+
+    .hotlines a:hover {
+      text-decoration: underline;
+    }
+
+    .disaster-feed {
+      background: #2a2a2a;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+    }
+
+    .disaster {
+      background: #333;
+      padding: 0.75rem;
+      border-left: 5px solid #bb86fc;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>🚨 SmartAid - Emergency Health & Disaster Reporting</header>
+
+  <div class="container">
+    <section class="form-section">
+      <h2>📝 Report an Emergency</h2>
+      <label for="type">Emergency Type:</label>
+      <select id="type">
+        <option value="Fire">🔥 Fire</option>
+        <option value="Flood">🌊 Flood</option>
+        <option value="Injury">🩹 Injury</option>
+        <option value="Earthquake">🌍 Earthquake</option>
+        <option value="Medical Emergency">🚑 Medical Emergency</option>
+        <option value="Building Collapse">🏚️ Building Collapse</option>
+        <option value="Road Accident">🚗 Road Accident</option>
+        <option value="Power Outage">💡 Power Outage</option>
+        <option value="Gas Leak">🛢️ Gas Leak</option>
+        <option value="Other">❓ Other</option>
+      </select>
+
+      <label for="location">📍 Location:</label>
+      <input type="text" id="location" placeholder="Enter location">
+      <button onclick="getLocation()">📍 Use My Location</button>
+
+      <label for="description">🗒️ Description:</label>
+      <textarea id="description" rows="4" placeholder="Provide a short description"></textarea>
+
+      <button onclick="submitReport()">🚀 Submit Report</button>
+      <button onclick="clearReports()">🗑️ Clear All Reports</button>
+    </section>
+
+    <section class="report-board">
+      <h2>📡 Live Emergency Reports</h2>
+      <div id="report-list"></div>
+    </section>
+
+    <section class="disaster-feed">
+      <h2>🌍 City Pulse - Real-Time Disaster Feed</h2>
+      <div id="disaster-list"></div>
+    </section>
+
+    <section class="hotlines">
+      <h2>📞 Emergency Helplines</h2>
+      <ul>
+        <li>🚔 Police: <a href="tel:100">100</a></li>
+        <li>🚒 Fire: <a href="tel:101">101</a></li>
+        <li>🚑 Ambulance: <a href="tel:102">102</a></li>
+        <li>🧠 Mental Health: <a href="tel:9152987821">9152987821</a></li>
+        <li>👮 Disaster Management: <a href="tel:108">108</a></li>
+        <li>👶 Child Helpline: <a href="tel:1098">1098</a></li>
+        <li>🧓 Elder Helpline: <a href="tel:14567">14567</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    const disasterData = [
+      { type: "Fire", description: "🔥 Large fire in downtown area." },
+      { type: "Flood", description: "🌊 Severe flooding reported in suburbs." },
+      { type: "Earthquake", description: "🌍 Earthquake of magnitude 5.4 near city center." },
+      { type: "Road Accident", description: "🚗 Serious road accident near the highway." }
+    ];
+
+    function displayDisasters() {
+      const disasterList = document.getElementById('disaster-list');
+      disasterList.innerHTML = '<h3>Live Disasters:</h3>';
+
+      disasterData.forEach((disaster) => {
+        const div = document.createElement('div');
+        div.className = 'disaster';
+        div.innerHTML = `<strong>${disaster.type}</strong> - ${disaster.description}`;
+        disasterList.appendChild(div);
+      });
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            document.getElementById('location').value = `Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`;
+          },
+          (error) => {
+            alert('Unable to fetch location. Please allow location access.');
+          }
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+      }
+    }
+
+    function submitReport() {
+      const type = document.getElementById('type').value;
+      const location = document.getElementById('location').value;
+      const description = document.getElementById('description').value;
+      const timestamp = new Date().toLocaleString();
+
+      const report = { type, location, description, timestamp };
+
+      let reports = JSON.parse(localStorage.getItem('reports')) || [];
+      reports.push(report);
+      localStorage.setItem('reports', JSON.stringify(reports));
+
+      displayReports();
+      document.getElementById('location').value = '';
+      document.getElementById('description').value = '';
+    }
+
+    function displayReports() {
+      const reportList = document.getElementById('report-list');
+      reportList.innerHTML = '';
+
+      const reports = JSON.parse(localStorage.getItem('reports')) || [];
+
+      reports.forEach((report) => {
+        const div = document.createElement('div');
+        div.className = 'report';
+        div.innerHTML = `<strong>${report.type}</strong> at ${report.location} <br><small>${report.timestamp}</small><br>${report.description}`;
+        reportList.appendChild(div);
+      });
+    }
+
+    function clearReports() {
+      localStorage.removeItem('reports');
+      displayReports();
+    }
+
+    window.onload = () => {
+      displayReports();
+      displayDisasters();
+    };
+  </script>
+</body>
+</html>

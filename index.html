@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoVitals Hub</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      background:#2f2f3f;
+      color:#d1c4e9;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+    }
+
+    .container{
+      width:90%;
+      max-width:1000px;
+      text-align:center;
+    }
+
+    h1{
+      font-size:4rem;
+      margin-bottom:10px;
+      color:#c084fc;
+      text-shadow:0 0 15px #7e22ce;
+      animation:glow 2s infinite alternate;
+    }
+
+    p{
+      margin-bottom:40px;
+      color:#b9a7d8;
+      font-size:1.1rem;
+    }
+
+    .projects{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:25px;
+    }
+
+    .card{
+      background:#3a2f4a;
+      border-radius:20px;
+      padding:35px 20px;
+      box-shadow:0 0 20px rgba(128,0,128,0.4);
+      transition:0.3s ease;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover{
+      transform:translateY(-10px) scale(1.03);
+      box-shadow:0 0 30px rgba(192,132,252,0.8);
+    }
+
+    .emoji{
+      font-size:4rem;
+      margin-bottom:20px;
+    }
+
+    .card h2{
+      margin-bottom:10px;
+      color:#e9d5ff;
+    }
+
+    .card p{
+      font-size:0.95rem;
+      color:#c4b5fd;
+      margin-bottom:0;
+    }
+
+    .top-glow{
+      position:absolute;
+      width:300px;
+      height:300px;
+      background:purple;
+      filter:blur(120px);
+      top:-120px;
+      left:-120px;
+      opacity:0.25;
+      z-index:-1;
+    }
+
+    .bottom-glow{
+      position:absolute;
+      width:300px;
+      height:300px;
+      background:#7e22ce;
+      filter:blur(120px);
+      bottom:-120px;
+      right:-120px;
+      opacity:0.25;
+      z-index:-1;
+    }
+
+    @keyframes glow{
+      from{
+        text-shadow:0 0 10px #7e22ce;
+      }
+      to{
+        text-shadow:0 0 25px #c084fc;
+      }
+    }
+
+    .footer{
+      margin-top:40px;
+      color:#9f8cb8;
+      font-size:0.9rem;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="top-glow"></div>
+  <div class="bottom-glow"></div>
+
+  <div class="container">
+
+    <h1>🌿 EcoVitals</h1>
+
+    <p>Your Smart Health Project Hub</p>
+
+    <div class="projects">
+
+      <div class="card" onclick="openProject('BMI Calculator')">
+
+        <div class="emoji">⚖️</div>
+
+        <h2>BMI Calculator</h2>
+
+        <p>
+          Calculate BMI instantly with a sleek dark purple interface.
+        </p>
+
+      </div>
+
+      <div class="card" onclick="openProject('Health Tracker')">
+
+        <div class="emoji">🩺</div>
+
+        <h2>Health Tracker</h2>
+
+        <p>
+          Track heart rate, water intake, and daily steps visually.
+        </p>
+
+      </div>
+
+      <div class="card" onclick="openProject('Smart Aid')">
+
+        <div class="emoji">🚑</div>
+
+        <h2>Smart Aid</h2>
+
+        <p>
+          Emergency support system with alerts and quick actions.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="footer">
+      Made with 💜 by EcoVitals
+    </div>
+
+  </div>
+
+  <script>
+
+function openProject(project){
+
+  if(project === "BMI Calculator"){
+    window.location.href = "./bmi/index.html";
+  }
+
+  else if(project === "Health Tracker"){
+    window.location.href = "./Health-Tracker/index.html";
+  }
+
+  else if(project === "Smart Aid"){
+    window.location.href = "./Smart-Aid/index.html";
+  }
+
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Health Tracker</title>
+  <style>
+    body {
+      background: #2f2f3f;
+      color: #d1c4e9;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    input, button {
+      background: #4a3f5f;
+      border: none;
+      color: #d1c4e9;
+      padding: 8px 12px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+
+    button {
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #654a9f;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    #chartContainer {
+      margin-top: 30px;
+      background: #3a2f4a;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #654a9f;
+      padding: 10px;
+    }
+
+    .chart-toggle {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🩺 Health Tracker</h1>
+
+  <label for="date">Date</label>
+  <input type="date" id="date" />
+
+  <label for="heart-rate">❤️ Heart Rate (bpm)</label>
+  <input type="number" id="heart-rate" min="0" />
+
+  <label for="steps">🚶 Steps</label>
+  <input type="number" id="steps" min="0" />
+
+  <label for="water-intake">💧 Water Intake (ml)</label>
+  <input type="number" id="water-intake" min="0" />
+
+  <button onclick="submitHealthData()">Submit Data</button>
+
+  <button onclick="clearAllData()">🗑️ Delete All Data</button>
+
+  <div class="chart-toggle">
+
+    <button onclick="renderChart(JSON.parse(localStorage.getItem('healthData')) || [], currentChartType, 'heartRate')">
+      ❤️ Heart Rate
+    </button>
+
+    <button onclick="renderChart(JSON.parse(localStorage.getItem('healthData')) || [], currentChartType, 'steps')">
+      🚶 Steps
+    </button>
+
+    <button onclick="renderChart(JSON.parse(localStorage.getItem('healthData')) || [], currentChartType, 'waterIntake')">
+      💧 Water
+    </button>
+
+  </div>
+
+  <div id="chartContainer">
+    <canvas id="healthChart" width="600" height="300"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+
+    let currentChartType = 'bar';
+    let chartInstance;
+
+    function submitHealthData() {
+
+      const date = document.getElementById('date').value;
+      const heartRate = parseInt(document.getElementById('heart-rate').value, 10);
+      const steps = parseInt(document.getElementById('steps').value, 10);
+      const waterIntake = parseInt(document.getElementById('water-intake').value, 10);
+
+      if (!date || isNaN(heartRate) || isNaN(steps) || isNaN(waterIntake)) {
+        alert('⚠️ Please fill out all fields correctly.');
+        return;
+      }
+
+      if (heartRate > 160) {
+        alert('🚨 Alert: Heart rate is too high!');
+      }
+
+      if (waterIntake < 2500) {
+        alert('🚱 Alert: Low water intake! Drink more water.');
+      }
+
+      const newEntry = {
+        date,
+        heartRate,
+        steps,
+        waterIntake
+      };
+
+      try {
+
+        let storedData = JSON.parse(localStorage.getItem('healthData')) || [];
+
+        storedData.push(newEntry);
+
+        localStorage.setItem('healthData', JSON.stringify(storedData));
+
+        alert('✅ Data saved successfully!');
+
+        renderChart(storedData, 'bar');
+
+        ['date', 'heart-rate', 'steps', 'water-intake'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+
+      } catch (err) {
+
+        console.error("❌ Failed to save health data:", err);
+
+        alert("⚠️ Something went wrong while saving your data.");
+      }
+    }
+
+    function clearAllData() {
+
+      const confirmDelete = confirm("⚠️ Delete all saved health data?");
+
+      if (confirmDelete) {
+
+        localStorage.removeItem('healthData');
+
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+
+        const ctx = document.getElementById('healthChart').getContext('2d');
+
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        alert("🗑️ All data deleted!");
+      }
+    }
+
+    function toggleChart(type) {
+
+      currentChartType = type;
+
+      const savedData = JSON.parse(localStorage.getItem('healthData')) || [];
+
+      renderChart(savedData, type);
+    }
+
+    function renderChart(data, type, metric = 'heartRate') {
+
+      const ctx = document.getElementById('healthChart').getContext('2d');
+
+      const grouped = {};
+
+      data.forEach(entry => {
+
+        if (!grouped[entry.date]) {
+
+          grouped[entry.date] = {
+            heartRate: [],
+            steps: [],
+            waterIntake: []
+          };
+        }
+
+        grouped[entry.date].heartRate.push(entry.heartRate);
+        grouped[entry.date].steps.push(entry.steps);
+        grouped[entry.date].waterIntake.push(entry.waterIntake);
+      });
+
+      const dates = Object.keys(grouped).sort().slice(-7);
+
+      const averaged = dates.map(date => {
+
+        const vals = grouped[date];
+
+        const avg = arr =>
+          Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+
+        return {
+          date,
+          heartRate: avg(vals.heartRate),
+          steps: avg(vals.steps),
+          waterIntake: avg(vals.waterIntake)
+        };
+      });
+
+      const labels = averaged.map(entry => entry.date);
+
+      let graphData = [];
+      let graphLabel = '';
+      let graphColor = '';
+      let unit = '';
+
+      if (metric === 'heartRate') {
+
+        graphData = averaged.map(entry => entry.heartRate);
+
+        graphLabel = '❤️ Heart Rate';
+
+        graphColor = 'rgba(186, 85, 211, 1)';
+
+        unit = 'BPM';
+      }
+
+      if (metric === 'steps') {
+
+        graphData = averaged.map(entry => entry.steps);
+
+        graphLabel = '🚶 Steps';
+
+        graphColor = 'rgba(128, 0, 128, 1)';
+
+        unit = 'Steps';
+      }
+
+      if (metric === 'waterIntake') {
+
+        graphData = averaged.map(entry => entry.waterIntake);
+
+        graphLabel = '💧 Water Intake';
+
+        graphColor = 'rgba(147, 112, 219, 1)';
+
+        unit = 'ml';
+      }
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+
+        type: type,
+
+        data: {
+
+          labels,
+
+          datasets: [
+
+            {
+              label: `${graphLabel} (${unit})`,
+              data: graphData,
+              borderColor: graphColor,
+              backgroundColor: graphColor.replace('1)', '0.3)'),
+              fill: type === 'line',
+              tension: 0.4,
+              borderWidth: 3,
+              pointRadius: type === 'line' ? 4 : 0,
+              barThickness: type === 'bar' ? 25 : undefined
+            }
+
+          ]
+        },
+
+        options: {
+
+          responsive: true,
+
+          plugins: {
+
+            title: {
+
+              display: true,
+
+              text: `${graphLabel} - Last 7 Days`,
+
+              color: '#d1c4e9',
+
+              font: {
+                size: 20
+              }
+            },
+
+            legend: {
+
+              labels: {
+                color: '#d1c4e9'
+              }
+            }
+          },
+
+          scales: {
+
+            x: {
+
+              ticks: {
+                color: '#d1c4e9'
+              },
+
+              grid: {
+                color: '#5a4e7a'
+              }
+            },
+
+            y: {
+
+  beginAtZero: true,
+
+  max:
+    metric === 'steps'
+      ? 10000
+      : metric === 'waterIntake'
+      ? 10000
+      : 200,
+
+  ticks: {
+
+    color: '#d1c4e9',
+
+    stepSize:
+      metric === 'steps'
+        ? 1000
+        : metric === 'waterIntake'
+        ? 500
+        : 20,
+
+    callback: function(value) {
+      return value + ' ' + unit;
+    }
+  },
+
+  grid: {
+    color: '#5a4e7a'
+  }
+}
+          },
+
+          animation: {
+
+            duration: 1000,
+
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const savedData = JSON.parse(localStorage.getItem('healthData')) || [];
+
+      if (savedData.length) {
+
+        renderChart(savedData, currentChartType);
+      }
+    });
+
+  </script>
+
+</body>
+</html>

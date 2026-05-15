@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMI Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #2e2e2e;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100vh;
+      padding: 2rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+      transition: background-color 0.5s, color 0.5s;
+    }
+    .container, .converter {
+      background-color: #3e3e3e;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(128, 0, 128, 0.6);
+      width: 300px;
+      transition: background-color 0.5s;
+    }
+    h2 {
+      text-align: center;
+      color: #b266ff;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      color: #d3bfff;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      margin-top: 0.3rem;
+      background-color: #5e5e5e;
+      color: #fff;
+    }
+    .gender-select {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1rem;
+    }
+    .gender-option {
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background-color: #5e5e5e;
+      transition: background 0.3s;
+      color: #fff;
+      text-align: center;
+    }
+    .gender-option.selected {
+      background-color: #b266ff;
+    }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.7rem;
+      background-color: #b266ff;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #9933ff;
+    }
+    #result, #convertedHeight {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #d3bfff;
+    }
+    .health-icon {
+      font-size: 2rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .health-info {
+      background-color: #4b3b5c;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      display: none;
+      font-size: 0.95rem;
+      color: #f3e8ff;
+    }
+    .range-text {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      color: #cfaeff;
+    }
+    #themeToggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #b266ff;
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    @media screen and (max-width: 650px) {
+      body {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="themeToggle">
+    <label class="switch">
+      <input type="checkbox" id="themeSlider">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div class="container">
+    <h2>BMI Calculator</h2>
+    <div class="gender-select">
+      <div class="gender-option" id="male" onclick="selectGender('male')">♂ Male</div>
+      <div class="gender-option" id="female" onclick="selectGender('female')">♀ Female</div>
+      <div class="gender-option" id="other" onclick="selectGender('other')">⚧ Other</div>
+    </div>
+    <label for="age">Age</label>
+    <input type="number" id="age" placeholder="Enter your age" />
+    <label for="height">Height (cm)</label>
+    <input type="number" id="height" placeholder="Enter your height" />
+    <label for="weight">Weight (kg)</label>
+    <input type="number" id="weight" placeholder="Enter your weight" />
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <div id="result"></div>
+    <div class="range-text">Underweight: &lt;18.5 | Normal: 18.5–24.9 | Overweight: 25–29.9 | Obese: ≥30</div>
+    <div id="health-icon" class="health-icon" style="display: none">
+      <button onclick="toggleHealthInfo()">Know More</button>
+    </div>
+    <div id="health-info" class="health-info"></div>
+    <button onclick="toggleRecords()">Previous Records</button>
+    <div id="recordsList" style="display:none;"></div>
+    <button onclick="clearHistory()">Clear History</button>
+  </div>
+
+  <div class="converter">
+    <h2>Feet & Inches to CM</h2>
+    <label for="feet">Feet</label>
+    <input type="number" id="feet" placeholder="Enter feet" />
+    <label for="inches">Inches</label>
+    <input type="number" id="inches" placeholder="Enter inches" />
+    <button onclick="convertToCM()">Convert</button>
+    <div id="convertedHeight"></div>
+  </div>
+
+  <script>
+    let selectedGender = null;
+    let currentHealthInfo = '';
+    const bmiRecords = [];
+
+    function selectGender(gender) {
+      selectedGender = gender;
+      document.getElementById('male').classList.remove('selected');
+      document.getElementById('female').classList.remove('selected');
+      document.getElementById('other').classList.remove('selected');
+      document.getElementById(gender).classList.add('selected');
+    }
+
+    function calculateBMI() {
+      const age = parseInt(document.getElementById('age').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const result = document.getElementById('result');
+      const icon = document.getElementById('health-icon');
+      const info = document.getElementById('health-info');
+
+      icon.style.display = 'none';
+      info.style.display = 'none';
+
+      if (!selectedGender || !age || !height || !weight) {
+        result.textContent = 'Please fill in all fields including gender.';
+        return;
+      }
+
+      const heightInMeters = height / 100;
+      const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+
+      let status = '';
+      let emoji = '';
+
+      if (bmi < 18.5) {
+        status = 'Underweight';
+        emoji = '⚠️';
+        currentHealthInfo = 'Being underweight can be a sign of malnutrition, eating disorders, or other health issues. It’s important to maintain a balanced diet and consult a healthcare professional if needed.';
+      } else if (bmi >= 18.5 && bmi < 25) {
+        status = 'Normal weight';
+        emoji = '✅';
+        currentHealthInfo = 'You are in the healthy range! Keep up the good work with a balanced diet and regular exercise to maintain your health.';
+      } else if (bmi >= 25 && bmi < 30) {
+        status = 'Overweight';
+        emoji = '⚠️';
+        currentHealthInfo = 'Being overweight increases the risk of chronic diseases such as diabetes, heart conditions, and joint issues. Consider a healthy lifestyle with more activity and nutritious food.';
+      } else {
+        status = 'Obese';
+        emoji = '⚠️';
+        currentHealthInfo = 'Obesity is a serious health condition linked to heart disease, diabetes, and more. Professional guidance and a structured plan may help manage your weight effectively.';
+      }
+
+      result.textContent = `Your BMI is ${bmi} (${status}) ${emoji}`;
+      icon.style.display = 'inline-block';
+
+      const timestamp = new Date().toLocaleString();
+      bmiRecords.push({ timestamp, age, height, weight, bmi, status });
+    }
+
+    function toggleRecords() {
+      const recordList = document.getElementById('recordsList');
+      if (recordList.style.display === 'none') {
+        recordList.innerHTML = '<strong>Previous Records:</strong><br><br>' +
+          bmiRecords.map(r => `Time: ${r.timestamp}<br>Age: ${r.age}, Height: ${r.height} cm, Weight: ${r.weight} kg, BMI: ${r.bmi} (${r.status})<br><br>`).join('');
+        recordList.style.display = 'block';
+      } else {
+        recordList.style.display = 'none';
+      }
+    }
+
+    function clearHistory() {
+      bmiRecords.length = 0;
+      document.getElementById('recordsList').style.display = 'none';
+    }
+
+    function toggleHealthInfo() {
+      const info = document.getElementById('health-info');
+      if (info.style.display === 'none') {
+        info.innerHTML = currentHealthInfo;
+        info.style.display = 'block';
+      } else {
+        info.style.display = 'none';
+      }
+    }
+
+    function convertToCM() {
+      const feet = parseInt(document.getElementById('feet').value);
+      const inches = parseInt(document.getElementById('inches').value);
+      const converted = document.getElementById('convertedHeight');
+
+      if (isNaN(feet) || isNaN(inches)) {
+        converted.textContent = 'Please enter both feet and inches.';
+        return;
+      }
+
+      const totalInches = (feet * 12) + inches;
+      const cm = (totalInches * 2.54).toFixed(2);
+      converted.textContent = `Height in CM: ${cm} cm`;
+    }
+
+    document.getElementById('themeSlider').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#fff';
+        document.querySelectorAll('.container, .converter').forEach((el) => {
+          el.style.backgroundColor = '#1a1a1a';
+        });
+      } else {
+        document.body.style.backgroundColor = '#2e2e2e';
+        document.body.style.color = '#fff';
+        document.querySelectorAll('.container, .converter').forEach((el) => {
+          el.style.backgroundColor = '#3e3e3e';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

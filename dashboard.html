@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoVitals — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #1e1829;
+      --card: rgba(42,32,60,0.85);
+      --card2: rgba(52,38,72,0.7);
+      --border: rgba(192,132,252,0.18);
+      --purple: #7e22ce;
+      --light: #c084fc;
+      --text: #d1c4e9;
+      --muted: #9f8cb8;
+      --accent: #a3e635;
+      --glow: rgba(192,132,252,0.35);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 15% 10%, #5b21b630 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 90%, #7e22ce25 0%, transparent 45%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    /* ── TOP NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 40px;
+      background: rgba(30,24,41,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      color: #d8b4fe;
+      text-shadow: 0 0 18px #7e22ce;
+      text-decoration: none;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(126,34,206,0.2);
+      border: 1px solid var(--border);
+      color: #c4b5fd;
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.25s;
+    }
+    .nav-back:hover {
+      background: rgba(126,34,206,0.45);
+      color: #f3e8ff;
+      box-shadow: 0 0 18px var(--glow);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 52px 24px 36px;
+      animation: fadeDown 0.7s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      color: #d8b4fe;
+      text-shadow: 0 0 30px #7e22ce;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    /* ── STAT STRIP ── */
+    .stat-strip {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 32px 48px;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 32px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 20px rgba(126,34,206,0.15);
+      min-width: 160px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 35px var(--glow);
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem;
+      color: #d8b4fe;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 0 32px;
+      margin-bottom: 56px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .section:nth-child(3) { animation-delay: 0.1s; }
+    .section:nth-child(4) { animation-delay: 0.2s; }
+    .section:nth-child(5) { animation-delay: 0.3s; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .section-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 8px var(--glow));
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      color: #e9d5ff;
+    }
+
+    .section-count {
+      margin-left: auto;
+      background: rgba(192,132,252,0.15);
+      color: var(--light);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* ── BMI TABLE ── */
+    .bmi-table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 25px rgba(126,34,206,0.15);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: linear-gradient(90deg, #3d1f6e, #5b21b6);
+    }
+
+    thead th {
+      padding: 14px 20px;
+      text-align: left;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      color: #e9d5ff;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(192,132,252,0.08);
+      transition: background 0.2s;
+      animation: rowSlide 0.4s ease both;
+    }
+
+    tbody tr:hover { background: rgba(192,132,252,0.07); }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody td {
+      padding: 14px 20px;
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .bmi-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .bmi-badge.normal   { background: rgba(163,230,53,0.18); color: #a3e635; }
+    .bmi-badge.under    { background: rgba(96,165,250,0.18); color: #60a5fa; }
+    .bmi-badge.over     { background: rgba(251,191,36,0.18); color: #fbbf24; }
+    .bmi-badge.obese    { background: rgba(248,113,113,0.18); color: #f87171; }
+
+    /* ── HEALTH TRACKER CARDS ── */
+    .ht-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .ht-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px 22px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 18px rgba(126,34,206,0.12);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: cardPop 0.4s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ht-card::before {
+      content: '';
+      position: absolute;
+      width: 120px; height: 120px;
+      background: rgba(192,132,252,0.06);
+      border-radius: 50%;
+      top: -40px; right: -40px;
+    }
+
+    .ht-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px var(--glow);
+    }
+
+    .ht-date {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ht-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ht-metric {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ht-metric-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ht-metric-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: #d8b4fe;
+    }
+
+    .progress-bar-wrap {
+      height: 5px;
+      background: rgba(192,132,252,0.12);
+      border-radius: 4px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #7e22ce, #c084fc);
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── CHART AREA ── */
+    .chart-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 25px rgba(126,34,206,0.15);
+      margin-bottom: 28px;
+    }
+
+    .chart-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .chart-tab {
+      background: rgba(126,34,206,0.15);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .chart-tab:hover { color: var(--text); background: rgba(126,34,206,0.28); }
+    .chart-tab.active {
+      background: linear-gradient(135deg, #5b21b6, #7e22ce);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 0 14px rgba(126,34,206,0.5);
+    }
+
+    /* ── SMART AID REPORTS ── */
+    .report-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .report-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--purple);
+      border-radius: 16px;
+      padding: 18px 22px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: transform 0.25s, box-shadow 0.25s;
+      animation: rowSlide 0.4s ease both;
+    }
+
+    .report-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 0 25px var(--glow);
+    }
+
+    .report-emoji { font-size: 1.8rem; flex-shrink: 0; }
+
+    .report-body { flex: 1; }
+
+    .report-type {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: #e9d5ff;
+      margin-bottom: 4px;
+    }
+
+    .report-meta {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .report-desc {
+      font-size: 0.88rem;
+      color: var(--text);
+      opacity: 0.8;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--muted);
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 14px; opacity: 0.5; }
+    .empty-text { font-size: 0.95rem; }
+
+    /* ── CLEAR BUTTONS ── */
+    .clear-btn {
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.25);
+      color: #f87171;
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-left: 10px;
+    }
+    .clear-btn:hover {
+      background: rgba(248,113,113,0.25);
+      box-shadow: 0 0 12px rgba(248,113,113,0.3);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      from { opacity:0; transform: translateY(-24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes rowSlide {
+      from { opacity:0; transform: translateX(-20px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+    @keyframes cardPop {
+      from { opacity:0; transform: scale(0.92); }
+      to   { opacity:1; transform: scale(1); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .hero h1 { font-size: 2rem; }
+      .section { padding: 0 16px; }
+      thead th, tbody td { padding: 10px 12px; font-size: 0.82rem; }
+      .stat-strip { padding: 0 16px 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="./index.html">🌿 EcoVitals</a>
+  <a class="nav-back" href="./index.html">← Back to Hub</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>📊 Your Health Dashboard</h1>
+  <p>All your previous records in one place — live from your browser storage.</p>
+</div>
+
+<!-- STAT STRIP -->
+<div class="stat-strip" id="statStrip">
+  <div class="stat-card">
+    <div class="stat-num" id="statBmi">0</div>
+    <div class="stat-label">⚖️ BMI Records</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statHt">0</div>
+    <div class="stat-label">🩺 Health Logs</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statAid">0</div>
+    <div class="stat-label">🚑 Aid Reports</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statAvgBmi">—</div>
+    <div class="stat-label">📈 Avg BMI</div>
+  </div>
+</div>
+
+<!-- ───── BMI SECTION ───── -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-icon">⚖️</span>
+    <span class="section-title">BMI Records</span>
+    <span class="section-count" id="bmiCount">0 entries</span>
+    <button class="clear-btn" onclick="clearBmi()">🗑 Clear</button>
+  </div>
+
+  <div class="bmi-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date & Time</th>
+          <th>Age</th>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>BMI</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="bmiBody"></tbody>
+    </table>
+    <div class="empty" id="bmiEmpty" style="display:none">
+      <div class="empty-icon">⚖️</div>
+      <div class="empty-text">No BMI records yet. Go use the BMI Calculator!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ───── HEALTH TRACKER SECTION ───── -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-icon">🩺</span>
+    <span class="section-title">Health Tracker Logs</span>
+    <span class="section-count" id="htCount">0 entries</span>
+    <button class="clear-btn" onclick="clearHt()">🗑 Clear</button>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-wrap">
+    <div class="chart-tabs">
+      <button class="chart-tab active" onclick="switchChart('heartRate',this)">❤️ Heart Rate</button>
+      <button class="chart-tab" onclick="switchChart('steps',this)">🚶 Steps</button>
+      <button class="chart-tab" onclick="switchChart('waterIntake',this)">💧 Water</button>
+    </div>
+    <canvas id="htChart" height="90"></canvas>
+    <div class="empty" id="htChartEmpty" style="display:none;">
+      <div class="empty-icon">📉</div>
+      <div class="empty-text">No chart data yet.</div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="ht-grid" id="htGrid"></div>
+  <div class="empty" id="htEmpty" style="display:none">
+    <div class="empty-icon">🩺</div>
+    <div class="empty-text">No health logs yet. Go use the Health Tracker!</div>
+  </div>
+</div>
+
+<!-- ───── SMART AID SECTION ───── -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-icon">🚑</span>
+    <span class="section-title">Smart Aid Reports</span>
+    <span class="section-count" id="aidCount">0 entries</span>
+    <button class="clear-btn" onclick="clearAid()">🗑 Clear</button>
+  </div>
+
+  <div class="report-list" id="aidList"></div>
+  <div class="empty" id="aidEmpty" style="display:none">
+    <div class="empty-icon">🚑</div>
+    <div class="empty-text">No emergency reports yet. Good news! 🎉</div>
+  </div>
+</div>
+
+<script>
+// ── emoji map for emergency types
+const aidEmoji = {
+  Fire:'🔥', Flood:'🌊', Injury:'🩹', Earthquake:'🌍',
+  'Medical Emergency':'🚑', 'Building Collapse':'🏚️',
+  'Road Accident':'🚗', 'Power Outage':'💡', 'Gas Leak':'🛢️', Other:'❓'
+};
+
+// ── BMI badge
+function bmiBadge(status){
+  const map = { 'Normal weight':'normal', Underweight:'under', Overweight:'over', Obese:'obese' };
+  const cls = map[status] || 'normal';
+  return `<span class="bmi-badge ${cls}">${status}</span>`;
+}
+
+// ── Load BMI (session-only in original, so stored in bmiRecords array — but we also support localStorage key 'bmiRecords')
+function loadBmi(){
+  // The original BMI page stores in a JS array (session), but we'll also check localStorage 'bmiRecords'
+  let records = [];
+  try { records = JSON.parse(localStorage.getItem('bmiRecords')) || []; } catch(e){}
+  
+  const tbody = document.getElementById('bmiBody');
+  const empty = document.getElementById('bmiEmpty');
+  const count = document.getElementById('bmiCount');
+  const statBmi = document.getElementById('statBmi');
+  const statAvg = document.getElementById('statAvgBmi');
+
+  statBmi.textContent = records.length;
+  count.textContent = records.length + ' entries';
+
+  if(!records.length){
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    statAvg.textContent = '—';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const avg = (records.reduce((s,r)=>s+parseFloat(r.bmi),0)/records.length).toFixed(1);
+  statAvg.textContent = avg;
+
+  tbody.innerHTML = records.slice().reverse().map((r,i)=>`
+    <tr style="animation-delay:${i*0.05}s">
+      <td style="color:var(--muted)">${records.length - i}</td>
+      <td>${r.timestamp || '—'}</td>
+      <td>${r.age || '—'}</td>
+      <td>${r.height ? r.height+' cm' : '—'}</td>
+      <td>${r.weight ? r.weight+' kg' : '—'}</td>
+      <td style="font-family:'Syne',sans-serif;color:#d8b4fe">${r.bmi}</td>
+      <td>${bmiBadge(r.status)}</td>
+    </tr>
+  `).join('');
+}
+
+// ── Load Health Tracker
+let htChartInst = null;
+let currentMetric = 'heartRate';
+
+function loadHt(){
+  let data = [];
+  try { data = JSON.parse(localStorage.getItem('healthData')) || []; } catch(e){}
+
+  const grid = document.getElementById('htGrid');
+  const empty = document.getElementById('htEmpty');
+  const count = document.getElementById('htCount');
+  const statHt = document.getElementById('statHt');
+
+  statHt.textContent = data.length;
+  count.textContent = data.length + ' entries';
+
+  if(!data.length){
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('htChartEmpty').style.display = 'block';
+    document.getElementById('htChart').style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  document.getElementById('htChartEmpty').style.display = 'none';
+  document.getElementById('htChart').style.display = 'block';
+
+  // Cards (latest first)
+  grid.innerHTML = data.slice().reverse().map((d,i)=>{
+    const hrPct = Math.min(100, Math.round((d.heartRate/200)*100));
+    const stPct = Math.min(100, Math.round((d.steps/10000)*100));
+    const wPct  = Math.min(100, Math.round((d.waterIntake/3000)*100));
+    return `
+    <div class="ht-card" style="animation-delay:${i*0.06}s">
+      <div class="ht-date">📅 ${d.date}</div>
+      <div class="ht-metrics">
+        <div>
+          <div class="ht-metric">
+            <span class="ht-metric-label">❤️ Heart Rate</span>
+            <span class="ht-metric-val">${d.heartRate} bpm</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${hrPct}%"></div></div>
+        </div>
+        <div>
+          <div class="ht-metric">
+            <span class="ht-metric-label">🚶 Steps</span>
+            <span class="ht-metric-val">${d.steps.toLocaleString()}</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${stPct}%"></div></div>
+        </div>
+        <div>
+          <div class="ht-metric">
+            <span class="ht-metric-label">💧 Water</span>
+            <span class="ht-metric-val">${d.waterIntake} ml</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${wPct}%"></div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderHtChart(data, currentMetric);
+}
+
+function renderHtChart(data, metric){
+  const labels = data.map(d=>d.date);
+  const metricMap = {
+    heartRate:{ label:'❤️ Heart Rate (bpm)', color:'rgba(192,100,252,1)' },
+    steps:    { label:'🚶 Steps',             color:'rgba(128,50,210,1)' },
+    waterIntake:{ label:'💧 Water (ml)',      color:'rgba(96,165,250,1)' }
+  };
+  const m = metricMap[metric];
+  const vals = data.map(d=>d[metric]);
+
+  if(htChartInst) htChartInst.destroy();
+
+  const ctx = document.getElementById('htChart').getContext('2d');
+  htChartInst = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets:[{
+        label: m.label,
+        data: vals,
+        borderColor: m.color,
+        backgroundColor: m.color.replace('1)','0.12)'),
+        fill: true,
+        tension: 0.4,
+        borderWidth: 3,
+        pointBackgroundColor: m.color,
+        pointRadius: 5,
+        pointHoverRadius: 8
+      }]
+    },
+    options:{
+      responsive: true,
+      plugins:{
+        legend:{ labels:{ color:'#d1c4e9', font:{ family:'DM Sans' } } },
+        title:{ display:false }
+      },
+      scales:{
+        x:{ ticks:{ color:'#9f8cb8' }, grid:{ color:'rgba(192,132,252,0.08)' } },
+        y:{ beginAtZero:true, ticks:{ color:'#9f8cb8' }, grid:{ color:'rgba(192,132,252,0.08)' } }
+      },
+      animation:{ duration:900, easing:'easeOutQuart' }
+    }
+  });
+}
+
+function switchChart(metric, btn){
+  currentMetric = metric;
+  document.querySelectorAll('.chart-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  let data = [];
+  try { data = JSON.parse(localStorage.getItem('healthData')) || []; } catch(e){}
+  if(data.length) renderHtChart(data, metric);
+}
+
+// ── Load Smart Aid
+function loadAid(){
+  let reports = [];
+  try { reports = JSON.parse(localStorage.getItem('reports')) || []; } catch(e){}
+
+  const list = document.getElementById('aidList');
+  const empty = document.getElementById('aidEmpty');
+  const count = document.getElementById('aidCount');
+  const statAid = document.getElementById('statAid');
+
+  statAid.textContent = reports.length;
+  count.textContent = reports.length + ' entries';
+
+  if(!reports.length){
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  list.innerHTML = reports.slice().reverse().map((r,i)=>`
+    <div class="report-card" style="animation-delay:${i*0.05}s;border-left-color:${r.type==='Fire'?'#f87171':r.type==='Flood'?'#60a5fa':'#c084fc'}">
+      <div class="report-emoji">${aidEmoji[r.type]||'❓'}</div>
+      <div class="report-body">
+        <div class="report-type">${r.type}</div>
+        <div class="report-meta">
+          <span>📍 ${r.location||'Unknown'}</span>
+          <span>🕐 ${r.timestamp||'—'}</span>
+        </div>
+        <div class="report-desc">${r.description||''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Clear functions
+function clearBmi(){
+  if(!confirm('Clear all BMI records?')) return;
+  localStorage.removeItem('bmiRecords');
+  loadBmi();
+}
+function clearHt(){
+  if(!confirm('Clear all Health Tracker logs?')) return;
+  localStorage.removeItem('healthData');
+  loadHt();
+}
+function clearAid(){
+  if(!confirm('Clear all Smart Aid reports?')) return;
+  localStorage.removeItem('reports');
+  loadAid();
+}
+
+// ── Animated counter
+function animateCount(el, target){
+  if(isNaN(target)||target===0){ return; }
+  let cur = 0;
+  const step = Math.ceil(target/30);
+  const t = setInterval(()=>{
+    cur = Math.min(cur+step, target);
+    el.textContent = cur;
+    if(cur>=target) clearInterval(t);
+  }, 30);
+}
+
+// ── Init
+window.addEventListener('DOMContentLoaded', ()=>{
+  loadBmi();
+  loadHt();
+  loadAid();
+
+  // Animate stat numbers
+  setTimeout(()=>{
+    let bmiR=0, htR=0, aidR=0;
+    try { bmiR=(JSON.parse(localStorage.getItem('bmiRecords'))||[]).length; }catch(e){}
+    try { htR=(JSON.parse(localStorage.getItem('healthData'))||[]).length; }catch(e){}
+    try { aidR=(JSON.parse(localStorage.getItem('reports'))||[]).length; }catch(e){}
+    animateCount(document.getElementById('statBmi'), bmiR);
+    animateCount(document.getElementById('statHt'), htR);
+    animateCount(document.getElementById('statAid'), aidR);
+  }, 300);
+});
+</script>
+
+</body>
+</html>

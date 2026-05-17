@@ -257,6 +257,12 @@
 
       const timestamp = new Date().toLocaleString();
       bmiRecords.push({ timestamp, age, height, weight, bmi, status });
+      // Also persist to localStorage for dashboard
+      try {
+        let stored = JSON.parse(localStorage.getItem('bmiRecords')) || [];
+        stored.push({ timestamp, age, height, weight, bmi, status });
+        localStorage.setItem('bmiRecords', JSON.stringify(stored));
+      } catch(e) {}
     }
 
     function toggleRecords() {
@@ -272,6 +278,7 @@
 
     function clearHistory() {
       bmiRecords.length = 0;
+      localStorage.removeItem('bmiRecords');
       document.getElementById('recordsList').style.display = 'none';
     }
 

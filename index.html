@@ -536,7 +536,7 @@ function openProject(project){
         body: JSON.stringify({ messages: chatHistory })
       });
       var data = await res.json();
-      var reply = data.reply || data.error || 'Sorry, I could not get a response. Please try again.';
+      var reply = data.reply || 'Sorry, I could not get a response. Please try again.';
       typingEl.remove();
       appendMsg(reply, 'bot');
       chatHistory.push({ role: 'assistant', content: reply });

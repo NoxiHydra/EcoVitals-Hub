@@ -221,11 +221,49 @@ h1{
   }
 }
 
+
+/* ── LOADING SCREEN ── */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#1e1829;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+  transition:opacity 0.6s ease, visibility 0.6s ease;
+}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-logo{font-size:4.5rem;margin-bottom:10px;animation:loaderBounce 1s ease infinite alternate;filter:drop-shadow(0 0 20px #7e22ce);}
+.loader-title{font-size:2.2rem;font-weight:800;color:#d8b4fe;text-shadow:0 0 25px #7e22ce;margin-bottom:6px;letter-spacing:1px;animation:loaderGlow 1.5s ease infinite alternate;}
+.loader-subtitle{font-size:0.9rem;color:#9f8cb8;margin-bottom:40px;}
+.loader-bar-wrap{width:220px;height:5px;background:rgba(192,132,252,0.15);border-radius:10px;overflow:hidden;margin-bottom:24px;}
+.loader-bar{height:100%;width:0%;background:linear-gradient(90deg,#5b21b6,#c084fc,#7e22ce);border-radius:10px;animation:loaderFill 2.2s ease forwards;}
+.loader-dots{display:flex;gap:8px;margin-bottom:0;}
+.loader-dots span{width:8px;height:8px;background:#7e22ce;border-radius:50%;animation:loaderDot 1.2s ease infinite;}
+.loader-dots span:nth-child(2){animation-delay:0.2s;}
+.loader-dots span:nth-child(3){animation-delay:0.4s;}
+.loader-tip{position:absolute;bottom:32px;font-size:0.82rem;color:#6b5a85;}
+@keyframes loaderBounce{from{transform:translateY(0) scale(1);}to{transform:translateY(-12px) scale(1.08);}}
+@keyframes loaderGlow{from{text-shadow:0 0 10px #7e22ce;}to{text-shadow:0 0 30px #c084fc,0 0 60px #7e22ce;}}
+@keyframes loaderFill{0%{width:0%;}100%{width:100%;}}
+@keyframes loaderDot{0%,80%,100%{transform:scale(0.7);opacity:0.5;}40%{transform:scale(1.2);opacity:1;background:#c084fc;}}
 </style>
 
 </head>
 
 <body>
+
+<!-- LOADING SCREEN -->
+<div id="loader">
+  <div class="loader-logo">🌿</div>
+  <div class="loader-title">EcoVitals</div>
+  <div class="loader-subtitle">Your Smart Health Project Hub</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+  <div class="loader-tip">Loading your health dashboard...</div>
+</div>
 
   <div class="top-glow"></div>
   <div class="bottom-glow"></div>
@@ -426,6 +464,12 @@ function openProject(project){
     font-size: 0.88rem;
     line-height: 1.5;
     word-break: break-word;
+    animation: msgPop 0.35s cubic-bezier(.175,.885,.32,1.275) both;
+  }
+  @keyframes msgPop {
+    0%   { opacity:0; transform: scale(0.7) translateY(10px); }
+    70%  { transform: scale(1.05) translateY(-2px); }
+    100% { opacity:1; transform: scale(1) translateY(0); }
   }
   .chat-msg.bot {
     background: #3a2f4a;
@@ -478,6 +522,34 @@ function openProject(project){
   }
   #chat-send-btn:hover { opacity: 0.85; }
   #chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── LOADING SCREEN ── */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#1e1829;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+  transition:opacity 0.6s ease, visibility 0.6s ease;
+}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-logo{font-size:4.5rem;margin-bottom:10px;animation:loaderBounce 1s ease infinite alternate;filter:drop-shadow(0 0 20px #7e22ce);}
+.loader-title{font-size:2.2rem;font-weight:800;color:#d8b4fe;text-shadow:0 0 25px #7e22ce;margin-bottom:6px;letter-spacing:1px;animation:loaderGlow 1.5s ease infinite alternate;}
+.loader-subtitle{font-size:0.9rem;color:#9f8cb8;margin-bottom:40px;}
+.loader-bar-wrap{width:220px;height:5px;background:rgba(192,132,252,0.15);border-radius:10px;overflow:hidden;margin-bottom:24px;}
+.loader-bar{height:100%;width:0%;background:linear-gradient(90deg,#5b21b6,#c084fc,#7e22ce);border-radius:10px;animation:loaderFill 2.2s ease forwards;}
+.loader-dots{display:flex;gap:8px;margin-bottom:0;}
+.loader-dots span{width:8px;height:8px;background:#7e22ce;border-radius:50%;animation:loaderDot 1.2s ease infinite;}
+.loader-dots span:nth-child(2){animation-delay:0.2s;}
+.loader-dots span:nth-child(3){animation-delay:0.4s;}
+.loader-tip{position:absolute;bottom:32px;font-size:0.82rem;color:#6b5a85;}
+@keyframes loaderBounce{from{transform:translateY(0) scale(1);}to{transform:translateY(-12px) scale(1.08);}}
+@keyframes loaderGlow{from{text-shadow:0 0 10px #7e22ce;}to{text-shadow:0 0 30px #c084fc,0 0 60px #7e22ce;}}
+@keyframes loaderFill{0%{width:0%;}100%{width:100%;}}
+@keyframes loaderDot{0%,80%,100%{transform:scale(0.7);opacity:0.5;}40%{transform:scale(1.2);opacity:1;background:#c084fc;}}
 </style>
 
 <div id="ecovitals-chat-widget">
@@ -549,6 +621,23 @@ function openProject(project){
     input.focus();
   };
 
+  function playPopSound() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(520, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(820, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.18, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+      o.start(ctx.currentTime);
+      o.stop(ctx.currentTime + 0.22);
+    } catch(e) {}
+  }
+
   function appendMsg(text, type) {
     var msgs = document.getElementById('chat-messages');
     var el = document.createElement('div');
@@ -556,6 +645,7 @@ function openProject(project){
     el.textContent = text;
     msgs.appendChild(el);
     msgs.scrollTop = msgs.scrollHeight;
+    if (type === 'bot') playPopSound();
     return el;
   }
 
@@ -566,6 +656,19 @@ function openProject(project){
     }
   });
 })();
+</script>
+
+<script>
+// Loading screen
+window.addEventListener('load', function() {
+  var loader = document.getElementById('loader');
+  setTimeout(function() {
+    loader.classList.add('hide');
+    setTimeout(function() {
+      loader.style.display = 'none';
+    }, 600);
+  }, 2400);
+});
 </script>
 </body>
 </html>

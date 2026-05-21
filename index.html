@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -8,19 +8,48 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
-:root{
-  --primary: #7c3aed;
-  --primary-light: #a78bfa;
-  --primary-soft: #ede9fe;
-  --primary-mid: #ddd6fe;
-  --accent: #8b5cf6;
-  --bg: #f5f3ff;
-  --card: #ffffff;
-  --text: #3b1f6e;
-  --text-muted: #7c6a9e;
-  --border: rgba(124,58,237,0.15);
-  --shadow: 0 10px 40px -10px rgba(124,58,237,0.2);
-  --shadow-hover: 0 20px 60px -10px rgba(124,58,237,0.35);
+/* ── LIGHT THEME ── */
+[data-theme="light"]{
+  --primary:#7c3aed;
+  --primary-light:#a78bfa;
+  --primary-soft:#ede9fe;
+  --primary-mid:#ddd6fe;
+  --bg:#faf9ff;
+  --bg2:#f3f0ff;
+  --card:#ffffff;
+  --card-border:rgba(124,58,237,0.12);
+  --text:#2e1065;
+  --text-muted:#6d5a8a;
+  --shadow:0 4px 24px rgba(124,58,237,0.10);
+  --shadow-hover:0 12px 40px rgba(124,58,237,0.22);
+  --nav-bg:rgba(250,249,255,0.9);
+  --blob1:rgba(167,139,250,0.22);
+  --blob2:rgba(196,181,253,0.18);
+  --blob3:rgba(124,58,237,0.10);
+  --doodle-opacity:0.15;
+  --loader-bg:#faf9ff;
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"]{
+  --primary:#a78bfa;
+  --primary-light:#c4b5fd;
+  --primary-soft:rgba(167,139,250,0.12);
+  --primary-mid:rgba(167,139,250,0.25);
+  --bg:#0f0a1e;
+  --bg2:#1a1035;
+  --card:rgba(42,28,70,0.8);
+  --card-border:rgba(167,139,250,0.18);
+  --text:#ede9fe;
+  --text-muted:#a78bfa;
+  --shadow:0 0 20px rgba(124,58,237,0.25);
+  --shadow-hover:0 0 45px rgba(167,139,250,0.4);
+  --nav-bg:rgba(15,10,30,0.92);
+  --blob1:rgba(91,33,182,0.35);
+  --blob2:rgba(109,40,217,0.28);
+  --blob3:rgba(167,139,250,0.15);
+  --doodle-opacity:0.22;
+  --loader-bg:#0f0a1e;
 }
 
 body{
@@ -29,486 +58,342 @@ body{
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
+  transition:background 0.4s, color 0.4s;
 }
 
-/* ── BACKGROUND BLOBS ── */
+/* ── BG BLOBS ── */
 .bg-blob{
-  position:fixed;
-  border-radius:50%;
-  filter:blur(80px);
-  pointer-events:none;
-  z-index:0;
+  position:fixed;border-radius:50%;
+  filter:blur(90px);pointer-events:none;z-index:0;
+  transition:background 0.4s;
 }
-.blob-1{
-  width:600px;height:600px;
-  background:rgba(167,139,250,0.25);
-  top:-200px;left:-150px;
-  animation:blobMove1 12s ease-in-out infinite;
-}
-.blob-2{
-  width:500px;height:500px;
-  background:rgba(196,181,253,0.2);
-  bottom:-150px;right:-100px;
-  animation:blobMove2 15s ease-in-out infinite;
-}
-.blob-3{
-  width:350px;height:350px;
-  background:rgba(124,58,237,0.12);
-  top:40%;left:50%;
-  animation:blobMove3 10s ease-in-out infinite;
-}
+.blob-1{width:550px;height:550px;background:var(--blob1);top:-180px;left:-120px;animation:blobMove1 13s ease-in-out infinite;}
+.blob-2{width:480px;height:480px;background:var(--blob2);bottom:-140px;right:-100px;animation:blobMove2 16s ease-in-out infinite;}
+.blob-3{width:320px;height:320px;background:var(--blob3);top:38%;left:48%;animation:blobMove3 11s ease-in-out infinite;}
 
-@keyframes blobMove1{
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(60px,-40px) scale(1.05);}
-  66%{transform:translate(-30px,50px) scale(0.95);}
-}
-@keyframes blobMove2{
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(-50px,30px) scale(1.08);}
-  66%{transform:translate(40px,-60px) scale(0.95);}
-}
-@keyframes blobMove3{
-  0%,100%{transform:translate(0,0) scale(1);}
-  50%{transform:translate(-80px,40px) scale(1.1);}
-}
+@keyframes blobMove1{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(55px,-35px) scale(1.05);}66%{transform:translate(-25px,45px) scale(0.96);}}
+@keyframes blobMove2{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(-45px,28px) scale(1.07);}66%{transform:translate(35px,-55px) scale(0.94);}}
+@keyframes blobMove3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-70px,35px) scale(1.1);}}
 
-/* ── FLOATING DOODLES ── */
-.doodle{
-  position:fixed;
-  pointer-events:none;
-  z-index:0;
-  opacity:0.18;
-}
+/* ── DOODLES ── */
+.doodle{position:fixed;pointer-events:none;z-index:0;opacity:var(--doodle-opacity);}
+.doodle svg{transition:opacity 0.4s;}
 .doodle-1{top:8%;left:5%;animation:doodleFloat 7s ease-in-out infinite;}
-.doodle-2{top:15%;right:8%;animation:doodleFloat 9s ease-in-out 1s infinite;}
-.doodle-3{bottom:20%;left:7%;animation:doodleFloat 6s ease-in-out 0.5s infinite;}
-.doodle-4{bottom:15%;right:5%;animation:doodleSpin 14s linear infinite;}
-.doodle-5{top:45%;left:2%;animation:doodleFloat 8s ease-in-out 2s infinite;}
-.doodle-6{top:30%;right:3%;animation:doodlePulse 4s ease-in-out infinite;}
+.doodle-2{top:14%;right:7%;animation:doodleFloat 9s ease-in-out 1s infinite;}
+.doodle-3{bottom:22%;left:6%;animation:doodleFloat 6s ease-in-out 0.5s infinite;}
+.doodle-4{bottom:14%;right:5%;animation:doodleSpin 15s linear infinite;}
+.doodle-5{top:44%;left:2%;animation:doodleFloat 8s ease-in-out 2s infinite;}
+.doodle-6{top:28%;right:3%;animation:doodlePulse 4s ease-in-out infinite;}
 
-@keyframes doodleFloat{
-  0%,100%{transform:translateY(0) rotate(0deg);}
-  25%{transform:translateY(-18px) rotate(4deg);}
-  50%{transform:translateY(-8px) rotate(-2deg);}
-  75%{transform:translateY(-22px) rotate(5deg);}
-}
-@keyframes doodleSpin{
-  0%{transform:rotate(0deg);}
-  100%{transform:rotate(360deg);}
-}
-@keyframes doodlePulse{
-  0%,100%{transform:scale(1);opacity:0.18;}
-  50%{transform:scale(1.2);opacity:0.3;}
-}
+@keyframes doodleFloat{0%,100%{transform:translateY(0) rotate(0deg);}25%{transform:translateY(-16px) rotate(4deg);}50%{transform:translateY(-7px) rotate(-2deg);}75%{transform:translateY(-20px) rotate(5deg);}}
+@keyframes doodleSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+@keyframes doodlePulse{0%,100%{transform:scale(1);}50%{transform:scale(1.18);}}
 
 /* ── NAV ── */
 nav{
   position:sticky;top:0;z-index:100;
-  background:rgba(245,243,255,0.85);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
-  padding:16px 48px;
+  background:var(--nav-bg);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--card-border);
+  padding:14px 48px;
   display:flex;align-items:center;justify-content:space-between;
+  transition:background 0.4s,border-color 0.4s;
 }
 .nav-logo{
   font-family:'Quicksand',sans-serif;
-  font-size:1.5rem;font-weight:700;
+  font-size:1.45rem;font-weight:700;
   color:var(--primary);
   display:flex;align-items:center;gap:8px;
+  text-decoration:none;
 }
-.nav-links{display:flex;gap:8px;}
+.nav-links{display:flex;gap:6px;align-items:center;}
 .nav-link{
-  padding:8px 20px;border-radius:50px;
-  font-size:0.9rem;font-weight:600;
+  padding:7px 16px;border-radius:50px;
+  font-size:0.88rem;font-weight:600;
   color:var(--text-muted);
   text-decoration:none;
   transition:0.2s;
   border:1px solid transparent;
 }
-.nav-link:hover{background:var(--primary-soft);color:var(--primary);border-color:var(--border);}
+.nav-link:hover{background:var(--primary-soft);color:var(--primary);}
 .nav-link.active{background:var(--primary);color:#fff;}
+
+/* Theme switcher */
+.theme-btn{
+  width:44px;height:24px;
+  border-radius:50px;
+  background:var(--primary-mid);
+  border:none;cursor:pointer;
+  position:relative;
+  transition:background 0.3s;
+  margin-left:10px;
+  flex-shrink:0;
+}
+.theme-thumb{
+  position:absolute;
+  top:3px;left:3px;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:var(--primary);
+  transition:transform 0.3s,background 0.3s;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;
+}
+[data-theme="dark"] .theme-thumb{transform:translateX(20px);}
 
 /* ── HERO ── */
 .hero{
   position:relative;z-index:1;
   text-align:center;
-  padding:90px 24px 70px;
-}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--primary-soft);
-  border:1px solid var(--primary-mid);
-  color:var(--primary);
-  border-radius:50px;
-  padding:8px 20px;
-  font-size:0.85rem;font-weight:700;
-  margin-bottom:28px;
-  animation:fadeUp 0.6s ease both;
-  letter-spacing:0.05em;text-transform:uppercase;
+  padding:100px 24px 80px;
 }
 .hero h1{
   font-family:'Quicksand',sans-serif;
-  font-size:4rem;font-weight:700;
-  line-height:1.1;
+  font-size:3.8rem;font-weight:700;
+  line-height:1.12;
   color:var(--text);
-  margin-bottom:20px;
-  animation:fadeUp 0.6s 0.1s ease both;
+  margin-bottom:18px;
+  animation:fadeUp 0.6s ease both;
 }
-.hero h1 span{
+.hero h1 em{
+  font-style:normal;
   background:linear-gradient(135deg,var(--primary),var(--primary-light));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hero-sub{
-  font-size:1.15rem;
+  font-size:1.08rem;
   color:var(--text-muted);
-  max-width:520px;
-  margin:0 auto 44px;
-  line-height:1.7;
-  animation:fadeUp 0.6s 0.2s ease both;
+  max-width:480px;
+  margin:0 auto 40px;
+  line-height:1.75;
+  animation:fadeUp 0.6s 0.1s ease both;
 }
 .hero-btns{
-  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
-  animation:fadeUp 0.6s 0.3s ease both;
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp 0.6s 0.2s ease both;
 }
 .btn-primary{
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;
-  padding:14px 36px;border-radius:50px;
-  font-size:1rem;font-weight:700;
-  text-decoration:none;
-  box-shadow:0 8px 30px rgba(124,58,237,0.35);
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;padding:13px 32px;border-radius:50px;
+  font-size:0.95rem;font-weight:700;text-decoration:none;
+  box-shadow:0 6px 24px rgba(124,58,237,0.3);
   transition:0.25s;border:none;cursor:pointer;
   display:inline-flex;align-items:center;gap:8px;
 }
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(124,58,237,0.45);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(124,58,237,0.4);}
 .btn-outline{
-  background:transparent;
-  color:var(--primary);
-  padding:14px 36px;border-radius:50px;
-  font-size:1rem;font-weight:700;
-  text-decoration:none;
+  background:transparent;color:var(--primary);
+  padding:13px 32px;border-radius:50px;
+  font-size:0.95rem;font-weight:700;text-decoration:none;
   border:2px solid var(--primary-mid);
   transition:0.25s;cursor:pointer;
   display:inline-flex;align-items:center;gap:8px;
 }
 .btn-outline:hover{background:var(--primary-soft);border-color:var(--primary);transform:translateY(-3px);}
 
-/* ── CARDS SECTION ── */
-.section{
+/* ── DIVIDER ── */
+.divider{
   position:relative;z-index:1;
-  max-width:1100px;
-  margin:0 auto;
-  padding:0 24px 80px;
+  max-width:800px;margin:0 auto 60px;
+  padding:0 24px;
+  display:flex;align-items:center;gap:16px;
 }
-.section-label{
-  text-align:center;
-  font-size:0.8rem;font-weight:700;
-  letter-spacing:0.15em;text-transform:uppercase;
-  color:var(--primary);
-  margin-bottom:12px;
-}
-.section-title{
-  font-family:'Quicksand',sans-serif;
-  text-align:center;
-  font-size:2rem;font-weight:700;
-  color:var(--text);
-  margin-bottom:48px;
+.divider-line{flex:1;height:1px;background:var(--card-border);}
+.divider-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--primary-light);
+  flex-shrink:0;
 }
 
+/* ── CARDS ── */
+.section{
+  position:relative;z-index:1;
+  max-width:1060px;margin:0 auto;
+  padding:0 24px 100px;
+}
 .cards{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:24px;
+  gap:22px;
 }
-
 .card{
   background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:36px 28px;
+  border:1px solid var(--card-border);
+  border-radius:20px;
+  padding:32px 26px 28px;
   box-shadow:var(--shadow);
   cursor:pointer;
-  transition:0.3s cubic-bezier(.4,0,.2,1);
+  transition:transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, border-color 0.3s;
   position:relative;overflow:hidden;
   animation:fadeUp 0.6s ease both;
+  backdrop-filter:blur(8px);
 }
-.card:nth-child(1){animation-delay:0.1s;}
-.card:nth-child(2){animation-delay:0.2s;}
-.card:nth-child(3){animation-delay:0.3s;}
+.card:nth-child(1){animation-delay:0.05s;}
+.card:nth-child(2){animation-delay:0.15s;}
+.card:nth-child(3){animation-delay:0.25s;}
 
-.card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg,var(--primary-soft),transparent);
-  opacity:0;
-  transition:0.3s;
-  border-radius:24px;
+.card::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--primary),var(--primary-light));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+  border-radius:0 0 20px 20px;
 }
-
+.card:hover::after{transform:scaleX(1);}
 .card:hover{
-  transform:translateY(-10px) scale(1.02);
+  transform:translateY(-8px);
   box-shadow:var(--shadow-hover);
-  border-color:rgba(124,58,237,0.3);
+  border-color:rgba(124,58,237,0.25);
 }
-.card:hover::before{opacity:1;}
-
 .card-icon{
-  width:64px;height:64px;
-  background:var(--primary-soft);
-  border-radius:20px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;
-  margin-bottom:22px;
-  transition:0.3s;
-  border:1px solid var(--primary-mid);
+  font-size:2.2rem;
+  margin-bottom:18px;
+  display:block;
+  transition:transform 0.3s;
 }
-.card:hover .card-icon{
-  background:var(--primary);
-  transform:scale(1.1) rotate(-5deg);
-}
-
+.card:hover .card-icon{transform:scale(1.15);}
 .card h2{
   font-family:'Quicksand',sans-serif;
-  font-size:1.35rem;font-weight:700;
+  font-size:1.3rem;font-weight:700;
   color:var(--text);
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 .card p{
-  font-size:0.95rem;
-  color:var(--text-muted);
-  line-height:1.65;
-  margin-bottom:22px;
+  font-size:0.92rem;color:var(--text-muted);
+  line-height:1.65;margin-bottom:20px;
 }
 .card-arrow{
-  display:inline-flex;align-items:center;gap:6px;
-  color:var(--primary);
-  font-weight:700;font-size:0.9rem;
-  transition:0.2s;
+  display:inline-flex;align-items:center;gap:5px;
+  color:var(--primary);font-weight:700;font-size:0.88rem;
+  transition:gap 0.2s;
 }
 .card:hover .card-arrow{gap:10px;}
 
-/* ── STATS ── */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:20px;
-  margin-bottom:80px;
-  position:relative;z-index:1;
-  max-width:1100px;margin:0 auto 80px;
-  padding:0 24px;
-}
-.stat{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:28px 20px;
-  text-align:center;
-  box-shadow:var(--shadow);
-  transition:0.3s;
-  animation:fadeUp 0.6s ease both;
-}
-.stat:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);}
-.stat-num{
-  font-family:'Quicksand',sans-serif;
-  font-size:2.2rem;font-weight:700;
-  background:linear-gradient(135deg,var(--primary),var(--primary-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:6px;
-}
-.stat-label{font-size:0.85rem;color:var(--text-muted);font-weight:600;}
-
 /* ── CHATBOT ── */
-#ecovitals-chat-widget{
-  position:fixed;bottom:28px;right:28px;z-index:9999;font-family:'Nunito',sans-serif;
-}
+#ecovitals-chat-widget{position:fixed;bottom:28px;right:28px;z-index:9999;font-family:'Nunito',sans-serif;}
 #chat-toggle-btn{
-  width:62px;height:62px;border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
   border:none;cursor:pointer;
-  box-shadow:0 8px 30px rgba(124,58,237,0.45);
+  box-shadow:0 6px 24px rgba(124,58,237,0.4);
   display:flex;align-items:center;justify-content:center;
   transition:0.25s;margin-left:auto;position:relative;
 }
-#chat-toggle-btn:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(124,58,237,0.6);}
-#chat-toggle-btn svg{width:28px;height:28px;fill:#fff;}
-
+#chat-toggle-btn:hover{transform:scale(1.1);}
+#chat-toggle-btn svg{width:26px;height:26px;fill:#fff;}
 #chat-badge{
   position:absolute;top:-4px;right:-4px;
-  width:20px;height:20px;
-  background:#f43f5e;border-radius:50%;
-  font-size:0.7rem;color:#fff;
+  width:20px;height:20px;background:#f43f5e;
+  border-radius:50%;font-size:0.68rem;color:#fff;
   display:none;align-items:center;justify-content:center;
   font-weight:700;border:2px solid var(--bg);
   animation:badgePop 0.4s cubic-bezier(.175,.885,.32,1.275);
 }
 #chat-badge.show{display:flex;}
 @keyframes badgePop{from{transform:scale(0);}to{transform:scale(1);}}
-
 #chat-panel{
   display:none;flex-direction:column;
-  width:360px;height:520px;
-  background:#fff;
-  border-radius:24px;
-  border:1px solid var(--border);
-  box-shadow:0 20px 60px rgba(124,58,237,0.2);
+  width:355px;height:510px;
+  background:var(--card);
+  border-radius:22px;border:1px solid var(--card-border);
+  box-shadow:0 16px 50px rgba(124,58,237,0.18);
   margin-bottom:14px;overflow:hidden;
-  animation:panelSlide 0.35s cubic-bezier(.175,.885,.32,1.275);
+  animation:panelSlide 0.3s cubic-bezier(.175,.885,.32,1.275);
+  backdrop-filter:blur(12px);
 }
-@keyframes panelSlide{from{opacity:0;transform:scale(0.9) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes panelSlide{from{opacity:0;transform:scale(0.92) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
 #chat-panel.open{display:flex;}
-
 #chat-header{
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  padding:16px 20px;
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
 }
-#chat-header-title{
-  display:flex;align-items:center;gap:10px;
-  color:#fff;font-weight:700;font-size:1rem;
-}
-.chat-dot{
-  width:9px;height:9px;
-  background:#a3e635;border-radius:50%;
-  animation:dotPulse 2s infinite;
-}
-@keyframes dotPulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-#chat-close-btn{background:none;border:none;color:rgba(255,255,255,0.8);font-size:1.3rem;cursor:pointer;transition:0.2s;padding:0 4px;}
+#chat-header-title{display:flex;align-items:center;gap:9px;color:#fff;font-weight:700;font-size:0.95rem;}
+.chat-dot{width:8px;height:8px;background:#a3e635;border-radius:50%;animation:dotPulse 2s infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+#chat-close-btn{background:none;border:none;color:rgba(255,255,255,0.85);font-size:1.2rem;cursor:pointer;transition:0.2s;padding:0 4px;}
 #chat-close-btn:hover{color:#fff;}
-
 #chat-suggestions{
-  display:flex;gap:6px;padding:12px 14px 8px;
-  flex-wrap:wrap;flex-shrink:0;
-  border-bottom:1px solid var(--border);
+  display:flex;gap:6px;padding:10px 12px 8px;flex-wrap:wrap;flex-shrink:0;
+  border-bottom:1px solid var(--card-border);
   background:var(--primary-soft);
 }
 .sugg-btn{
-  background:#fff;
-  border:1px solid var(--primary-mid);
-  color:var(--primary);
-  border-radius:20px;
-  padding:5px 12px;
-  font-size:0.78rem;font-weight:600;
-  cursor:pointer;transition:0.2s;
-  font-family:'Nunito',sans-serif;
+  background:var(--card);border:1px solid var(--primary-mid);
+  color:var(--primary);border-radius:20px;
+  padding:5px 11px;font-size:0.76rem;font-weight:600;
+  cursor:pointer;transition:0.2s;font-family:'Nunito',sans-serif;
 }
 .sugg-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
-
 #chat-messages{
-  flex:1;overflow-y:auto;padding:16px;
-  display:flex;flex-direction:column;gap:10px;
-  scrollbar-width:thin;scrollbar-color:var(--primary-mid) #fff;
+  flex:1;overflow-y:auto;padding:14px;
+  display:flex;flex-direction:column;gap:9px;
+  scrollbar-width:thin;scrollbar-color:var(--primary-mid) transparent;
 }
 #chat-messages::-webkit-scrollbar{width:4px;}
 #chat-messages::-webkit-scrollbar-thumb{background:var(--primary-mid);border-radius:4px;}
-
 .chat-msg{
-  max-width:85%;padding:10px 14px;
-  border-radius:16px;font-size:0.88rem;
+  max-width:85%;padding:9px 13px;
+  border-radius:15px;font-size:0.86rem;
   line-height:1.55;word-break:break-word;
-  animation:msgPop 0.35s cubic-bezier(.175,.885,.32,1.275) both;
+  animation:msgPop 0.32s cubic-bezier(.175,.885,.32,1.275) both;
   font-family:'Nunito',sans-serif;
 }
-@keyframes msgPop{
-  0%{opacity:0;transform:scale(0.75) translateY(10px);}
-  70%{transform:scale(1.04) translateY(-2px);}
-  100%{opacity:1;transform:scale(1) translateY(0);}
-}
-.chat-msg.bot{
-  background:var(--primary-soft);
-  color:var(--text);
-  border-bottom-left-radius:4px;
-  align-self:flex-start;
-  border:1px solid var(--border);
-}
-.chat-msg.user{
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;
-  border-bottom-right-radius:4px;
-  align-self:flex-end;
-}
-.chat-msg.typing{
-  background:var(--primary-soft);
-  color:var(--text-muted);
-  align-self:flex-start;
-  border:1px solid var(--border);
-}
-
+@keyframes msgPop{0%{opacity:0;transform:scale(0.78) translateY(8px);}70%{transform:scale(1.03);}100%{opacity:1;transform:scale(1) translateY(0);}}
+.chat-msg.bot{background:var(--primary-soft);color:var(--text);border-bottom-left-radius:4px;align-self:flex-start;border:1px solid var(--card-border);}
+.chat-msg.user{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-bottom-right-radius:4px;align-self:flex-end;}
+.chat-msg.typing{background:var(--primary-soft);color:var(--text-muted);align-self:flex-start;border:1px solid var(--card-border);}
 #chat-input-area{
-  display:flex;gap:8px;padding:12px 14px;
-  border-top:1px solid var(--border);
-  flex-shrink:0;background:#fafafa;
+  display:flex;gap:8px;padding:11px 13px;
+  border-top:1px solid var(--card-border);flex-shrink:0;
+  background:var(--bg2);
 }
 #chat-input{
-  flex:1;
-  background:#fff;
-  border:1.5px solid var(--border);
-  border-radius:12px;
-  padding:10px 14px;
-  color:var(--text);
-  font-size:0.88rem;
-  outline:none;
-  transition:0.2s;
+  flex:1;background:var(--card);
+  border:1.5px solid var(--card-border);border-radius:11px;
+  padding:9px 13px;color:var(--text);
+  font-size:0.86rem;outline:none;transition:0.2s;
   font-family:'Nunito',sans-serif;
 }
 #chat-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,58,237,0.1);}
 #chat-input::placeholder{color:var(--text-muted);}
 #chat-send-btn{
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  border:none;border-radius:12px;
-  padding:10px 16px;color:#fff;
-  font-size:0.88rem;cursor:pointer;
-  transition:0.2s;flex-shrink:0;
-  font-weight:700;font-family:'Nunito',sans-serif;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  border:none;border-radius:11px;padding:9px 15px;
+  color:#fff;font-size:0.86rem;cursor:pointer;
+  transition:0.2s;flex-shrink:0;font-weight:700;font-family:'Nunito',sans-serif;
 }
-#chat-send-btn:hover{opacity:0.9;transform:scale(1.05);}
+#chat-send-btn:hover{opacity:0.9;transform:scale(1.04);}
 #chat-send-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 
 /* ── FOOTER ── */
 footer{
-  position:relative;z-index:1;
-  text-align:center;
-  padding:40px 24px;
-  color:var(--text-muted);
-  font-size:0.9rem;
-  border-top:1px solid var(--border);
+  position:relative;z-index:1;text-align:center;
+  padding:32px 24px;color:var(--text-muted);
+  font-size:0.88rem;border-top:1px solid var(--card-border);
 }
-footer span{color:var(--primary);font-weight:700;}
+footer a{color:var(--primary);font-weight:700;text-decoration:none;}
 
 /* ── LOADER ── */
 #loader{
   position:fixed;inset:0;
-  background:var(--bg);
+  background:var(--loader-bg, #faf9ff);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  z-index:99999;
-  transition:opacity 0.6s ease,visibility 0.6s ease;
+  z-index:99999;transition:opacity 0.5s,visibility 0.5s;
 }
 #loader.hide{opacity:0;visibility:hidden;pointer-events:none;}
-.loader-ring{
-  width:80px;height:80px;
-  border:4px solid var(--primary-mid);
-  border-top-color:var(--primary);
-  border-radius:50%;
-  animation:loaderSpin 0.9s linear infinite;
-  margin-bottom:24px;
-}
-@keyframes loaderSpin{to{transform:rotate(360deg);}}
-.loader-logo-txt{
+.loader-emoji{font-size:3.5rem;margin-bottom:6px;animation:loaderBounce 1s ease-in-out infinite alternate;}
+@keyframes loaderBounce{from{transform:translateY(0);}to{transform:translateY(-14px);}}
+.loader-title{
   font-family:'Quicksand',sans-serif;
-  font-size:1.8rem;font-weight:700;
-  color:var(--primary);
-  margin-bottom:8px;
+  font-size:1.9rem;font-weight:700;
+  color:var(--primary);margin-bottom:6px;
 }
-.loader-sub{font-size:0.9rem;color:var(--text-muted);}
+.loader-sub{font-size:0.88rem;color:var(--text-muted);margin-bottom:28px;}
 .loader-bar-wrap{
   width:180px;height:4px;
-  background:var(--primary-mid);
-  border-radius:10px;overflow:hidden;
-  margin-top:20px;
+  background:var(--primary-mid);border-radius:10px;overflow:hidden;
 }
 .loader-bar-fill{
   height:100%;width:0%;
@@ -517,26 +402,28 @@ footer span{color:var(--primary);font-weight:700;}
   animation:loaderFill 2.2s ease forwards;
 }
 @keyframes loaderFill{to{width:100%;}}
+.loader-dots{display:flex;gap:7px;margin-top:20px;}
+.loader-dots span{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--primary-light);
+  animation:loaderDot 1.2s ease infinite;
+}
+.loader-dots span:nth-child(2){animation-delay:0.2s;}
+.loader-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes loaderDot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1.2);opacity:1;}}
 
 /* ── ANIMATIONS ── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(24px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-/* ── SCROLL REVEAL ── */
-.reveal{
-  opacity:0;transform:translateY(30px);
-  transition:0.8s cubic-bezier(.16,1,.3,1);
-}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(26px);transition:0.75s cubic-bezier(.16,1,.3,1);}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
 @media(max-width:768px){
-  nav{padding:14px 20px;}
-  .hero h1{font-size:2.4rem;}
+  nav{padding:12px 18px;}
+  .hero h1{font-size:2.3rem;}
   .hero{padding:60px 20px 50px;}
   #chat-panel{width:92vw!important;height:72vh!important;}
-  .nav-links{display:none;}
+  .nav-links .nav-link{display:none;}
+  .nav-links .nav-link.active,.nav-links .theme-btn{display:flex;}
 }
 </style>
 </head>
@@ -544,10 +431,11 @@ footer span{color:var(--primary);font-weight:700;}
 
 <!-- LOADER -->
 <div id="loader">
-  <div class="loader-ring"></div>
-  <div class="loader-logo-txt">🌿 EcoVitals</div>
+  <div class="loader-emoji">🌿</div>
+  <div class="loader-title">EcoVitals</div>
   <div class="loader-sub">Your Smart Health Hub</div>
   <div class="loader-bar-wrap"><div class="loader-bar-fill"></div></div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
 </div>
 
 <!-- BG BLOBS -->
@@ -555,117 +443,80 @@ footer span{color:var(--primary);font-weight:700;}
 <div class="bg-blob blob-2"></div>
 <div class="bg-blob blob-3"></div>
 
-<!-- FLOATING DOODLES -->
-<svg class="doodle doodle-1" width="70" height="70" viewBox="0 0 70 70" fill="none">
-  <circle cx="35" cy="35" r="30" stroke="#7c3aed" stroke-width="3" stroke-dasharray="8 5"/>
-  <circle cx="35" cy="35" r="15" stroke="#a78bfa" stroke-width="2"/>
-</svg>
-<svg class="doodle doodle-2" width="60" height="60" viewBox="0 0 60 60" fill="none">
-  <rect x="8" y="8" width="44" height="44" rx="12" stroke="#7c3aed" stroke-width="3" stroke-dasharray="6 4"/>
-  <rect x="20" y="20" width="20" height="20" rx="6" fill="#ede9fe"/>
-</svg>
-<svg class="doodle doodle-3" width="55" height="55" viewBox="0 0 55 55" fill="none">
-  <polygon points="27.5,5 52,50 3,50" stroke="#8b5cf6" stroke-width="3" fill="none" stroke-dasharray="7 4"/>
-</svg>
-<svg class="doodle doodle-4" width="50" height="50" viewBox="0 0 50 50" fill="none">
-  <path d="M25 5 L45 25 L25 45 L5 25 Z" stroke="#7c3aed" stroke-width="3" fill="none"/>
-  <path d="M25 12 L38 25 L25 38 L12 25 Z" stroke="#a78bfa" stroke-width="2" fill="none"/>
-</svg>
-<svg class="doodle doodle-5" width="45" height="45" viewBox="0 0 45 45" fill="none">
-  <circle cx="22.5" cy="22.5" r="18" stroke="#8b5cf6" stroke-width="2.5" stroke-dasharray="5 3"/>
-  <line x1="22.5" y1="4.5" x2="22.5" y2="40.5" stroke="#a78bfa" stroke-width="2"/>
-  <line x1="4.5" y1="22.5" x2="40.5" y2="22.5" stroke="#a78bfa" stroke-width="2"/>
-</svg>
-<svg class="doodle doodle-6" width="65" height="65" viewBox="0 0 65 65" fill="none">
-  <path d="M32.5 5 C50 5 60 18 60 32.5 C60 47 50 60 32.5 60 C15 60 5 47 5 32.5 C5 18 15 5 32.5 5 Z" stroke="#7c3aed" stroke-width="2.5" fill="none" stroke-dasharray="9 5"/>
-</svg>
+<!-- DOODLES -->
+<div class="doodle doodle-1"><svg width="65" height="65" viewBox="0 0 65 65" fill="none"><circle cx="32.5" cy="32.5" r="27" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="7 5"/><circle cx="32.5" cy="32.5" r="13" stroke="#a78bfa" stroke-width="2"/></svg></div>
+<div class="doodle doodle-2"><svg width="58" height="58" viewBox="0 0 58 58" fill="none"><rect x="7" y="7" width="44" height="44" rx="12" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6 4"/><rect x="19" y="19" width="20" height="20" rx="6" stroke="#a78bfa" stroke-width="1.5" fill="none"/></svg></div>
+<div class="doodle doodle-3"><svg width="52" height="52" viewBox="0 0 52 52" fill="none"><polygon points="26,4 50,48 2,48" stroke="#8b5cf6" stroke-width="2.5" fill="none" stroke-dasharray="6 4"/></svg></div>
+<div class="doodle doodle-4"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M24 4 L44 24 L24 44 L4 24 Z" stroke="#7c3aed" stroke-width="2.5" fill="none"/><path d="M24 12 L36 24 L24 36 L12 24 Z" stroke="#a78bfa" stroke-width="1.5" fill="none"/></svg></div>
+<div class="doodle doodle-5"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="17" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 3"/><line x1="22" y1="5" x2="22" y2="39" stroke="#a78bfa" stroke-width="1.5"/><line x1="5" y1="22" x2="39" y2="22" stroke="#a78bfa" stroke-width="1.5"/></svg></div>
+<div class="doodle doodle-6"><svg width="62" height="62" viewBox="0 0 62 62" fill="none"><path d="M31 4 C50 4 58 17 58 31 C58 45 50 58 31 58 C12 58 4 45 4 31 C4 17 12 4 31 4 Z" stroke="#7c3aed" stroke-width="2" fill="none" stroke-dasharray="8 5"/></svg></div>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">🌿 EcoVitals</div>
+  <a class="nav-logo" href="#">🌿 EcoVitals</a>
   <div class="nav-links">
     <a href="#" class="nav-link active">Home</a>
     <a href="./dashboard.html" class="nav-link">Dashboard</a>
     <a href="./bmi/index.html" class="nav-link">BMI</a>
     <a href="./Health-Tracker/index.html" class="nav-link">Tracker</a>
     <a href="./Smart-Aid/index.html" class="nav-link">Smart Aid</a>
+    <button class="theme-btn" onclick="toggleTheme()" title="Switch theme">
+      <div class="theme-thumb" id="theme-thumb">☀️</div>
+    </button>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">✨ Smart Health Platform</div>
-  <h1>Your <span>Health Journey</span><br/>Starts Here</h1>
-  <p class="hero-sub">Track your BMI, monitor vitals, and access emergency support — all in one beautiful, smart hub.</p>
+  <h1>Track your health,<br/><em>feel your best.</em></h1>
+  <p class="hero-sub">A simple hub for your BMI, daily vitals, and emergency support — all in one place.</p>
   <div class="hero-btns">
-    <a href="#projects" class="btn-primary">🚀 Explore Tools</a>
-    <a href="./dashboard.html" class="btn-outline">📊 View Dashboard</a>
+    <a href="#projects" class="btn-primary" onclick="smoothScroll(event,'projects')">Explore Tools</a>
+    <a href="./dashboard.html" class="btn-outline">📊 Dashboard</a>
   </div>
 </div>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat reveal">
-    <div class="stat-num">3+</div>
-    <div class="stat-label">Health Tools</div>
-  </div>
-  <div class="stat reveal">
-    <div class="stat-num">100%</div>
-    <div class="stat-label">Free to Use</div>
-  </div>
-  <div class="stat reveal">
-    <div class="stat-num">AI</div>
-    <div class="stat-label">Powered Assistant</div>
-  </div>
-  <div class="stat reveal">
-    <div class="stat-num">24/7</div>
-    <div class="stat-label">Always Available</div>
-  </div>
+<!-- DIVIDER -->
+<div class="divider reveal">
+  <div class="divider-line"></div>
+  <div class="divider-dot"></div>
+  <div class="divider-line"></div>
 </div>
 
 <!-- CARDS -->
 <div class="section" id="projects">
-  <div class="section-label reveal">Our Tools</div>
-  <div class="section-title reveal">Everything You Need</div>
   <div class="cards">
-
     <div class="card reveal" onclick="openProject('BMI Calculator')">
-      <div class="card-icon">⚖️</div>
+      <span class="card-icon">⚖️</span>
       <h2>BMI Calculator</h2>
-      <p>Calculate your Body Mass Index instantly and get personalized health insights with our sleek calculator.</p>
-      <span class="card-arrow">Open Tool <span>→</span></span>
+      <p>Enter your height and weight to get your Body Mass Index with a clear health breakdown.</p>
+      <span class="card-arrow">Open → </span>
     </div>
-
     <div class="card reveal" onclick="openProject('Health Tracker')">
-      <div class="card-icon">🩺</div>
+      <span class="card-icon">🩺</span>
       <h2>Health Tracker</h2>
-      <p>Monitor your heart rate, water intake, and daily steps with beautiful visual charts and progress tracking.</p>
-      <span class="card-arrow">Open Tool <span>→</span></span>
+      <p>Log your heart rate, water intake, and steps every day and watch your progress over time.</p>
+      <span class="card-arrow">Open → </span>
     </div>
-
     <div class="card reveal" onclick="openProject('Smart Aid')">
-      <div class="card-icon">🚑</div>
+      <span class="card-icon">🚑</span>
       <h2>Smart Aid</h2>
-      <p>Emergency support system with instant alerts, quick actions, and critical health guidance when you need it.</p>
-      <span class="card-arrow">Open Tool <span>→</span></span>
+      <p>Quick access to emergency actions, alerts, and health guidance when it matters most.</p>
+      <span class="card-arrow">Open → </span>
     </div>
-
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  Made with <span>💜</span> by <span>EcoVitals</span> — Your Smart Health Hub
+  Made with 💜 by <a href="#">EcoVitals</a> &nbsp;·&nbsp; <a href="./dashboard.html">Dashboard</a>
 </footer>
 
 <!-- CHATBOT -->
 <div id="ecovitals-chat-widget">
   <div id="chat-panel">
     <div id="chat-header">
-      <div id="chat-header-title">
-        <span class="chat-dot"></span>
-        🌿 EcoVitals AI
-      </div>
+      <div id="chat-header-title"><span class="chat-dot"></span>🌿 EcoVitals AI</div>
       <button id="chat-close-btn" onclick="toggleChat()">✕</button>
     </div>
     <div id="chat-suggestions">
@@ -684,14 +535,34 @@ footer span{color:var(--primary);font-weight:700;}
   </div>
   <button id="chat-toggle-btn" onclick="toggleChat()" title="Chat with EcoVitals AI">
     <div id="chat-badge">1</div>
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-    </svg>
+    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
   </button>
 </div>
 
 <script>
-// ── PROJECT NAV ──
+// ── THEME ──
+function toggleTheme(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme', isDark?'light':'dark');
+  document.getElementById('theme-thumb').textContent = isDark?'☀️':'🌙';
+  localStorage.setItem('ecovitals-theme', isDark?'light':'dark');
+}
+// Load saved theme
+(function(){
+  var saved=localStorage.getItem('ecovitals-theme')||'light';
+  document.documentElement.setAttribute('data-theme',saved);
+  var thumb=document.getElementById('theme-thumb');
+  if(thumb) thumb.textContent=saved==='dark'?'🌙':'☀️';
+})();
+
+// ── SMOOTH SCROLL ──
+function smoothScroll(e,id){
+  e.preventDefault();
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+// ── PROJECTS ──
 function openProject(p){
   if(p==='BMI Calculator') window.location.href='./bmi/index.html';
   else if(p==='Health Tracker') window.location.href='./Health-Tracker/index.html';
@@ -699,130 +570,62 @@ function openProject(p){
 }
 
 // ── SCROLL REVEAL ──
-var reveals = document.querySelectorAll('.reveal');
-var observer = new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting){ e.target.classList.add('visible'); }
-  });
-},{threshold:0.12});
-reveals.forEach(function(r){ observer.observe(r); });
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(r){observer.observe(r);});
 
 // ── CHATBOT ──
 (function(){
-  var chatHistory=[], unread=0, isOpen=false;
-
+  var chatHistory=[],unread=0,isOpen=false;
   window.toggleChat=function(){
     var panel=document.getElementById('chat-panel');
     isOpen=!isOpen;
-    if(isOpen){
-      panel.classList.add('open');
-      document.getElementById('chat-input').focus();
-      unread=0;
-      document.getElementById('chat-badge').classList.remove('show');
-    } else {
-      panel.classList.remove('open');
-    }
+    if(isOpen){panel.classList.add('open');document.getElementById('chat-input').focus();unread=0;document.getElementById('chat-badge').classList.remove('show');}
+    else panel.classList.remove('open');
   };
-
-  window.sendSuggestion=function(text){
-    document.getElementById('chat-input').value=text;
-    window.sendChatMessage();
-  };
-
+  window.sendSuggestion=function(text){document.getElementById('chat-input').value=text;window.sendChatMessage();};
   window.sendChatMessage=async function(){
     var input=document.getElementById('chat-input');
     var sendBtn=document.getElementById('chat-send-btn');
     var text=input.value.trim();
-    if(!text) return;
-    appendMsg(text,'user');
-    chatHistory.push({role:'user',content:text});
+    if(!text)return;
+    appendMsg(text,'user');chatHistory.push({role:'user',content:text});
     input.value='';sendBtn.disabled=true;
     var typingEl=appendMsg('Thinking…','typing');
     try{
-      var res=await fetch('/api/chat',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({messages:chatHistory})
-      });
+      var res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})});
       var data=await res.json();
       var reply=data.reply||'Sorry, I could not get a response.';
-      typingEl.remove();
-      typewriterMsg(reply,'bot');
+      typingEl.remove();typewriterMsg(reply,'bot');
       chatHistory.push({role:'assistant',content:reply});
-      if(!isOpen){
-        unread++;
-        var badge=document.getElementById('chat-badge');
-        badge.textContent=unread;
-        badge.classList.add('show');
-      }
-    }catch(e){
-      typingEl.remove();
-      appendMsg('Connection error. Please try again.','bot');
-    }
+      if(!isOpen){unread++;var b=document.getElementById('chat-badge');b.textContent=unread;b.classList.add('show');}
+    }catch(e){typingEl.remove();appendMsg('Connection error. Please try again.','bot');}
     sendBtn.disabled=false;input.focus();
   };
-
   function typewriterMsg(text,type){
     var msgs=document.getElementById('chat-messages');
-    var el=document.createElement('div');
-    el.className='chat-msg '+type;
-    el.textContent='';
-    msgs.appendChild(el);
-    msgs.scrollTop=msgs.scrollHeight;
-    playPopSound();
-    var i=0,speed=Math.max(12,Math.min(30,1800/text.length));
-    var iv=setInterval(function(){
-      el.textContent+=text[i];
-      msgs.scrollTop=msgs.scrollHeight;
-      i++;if(i>=text.length)clearInterval(iv);
-    },speed);
+    var el=document.createElement('div');el.className='chat-msg '+type;el.textContent='';
+    msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;playPopSound();
+    var i=0,speed=Math.max(12,Math.min(28,1600/text.length));
+    var iv=setInterval(function(){el.textContent+=text[i];msgs.scrollTop=msgs.scrollHeight;i++;if(i>=text.length)clearInterval(iv);},speed);
     return el;
   }
-
   function playPopSound(){
-    try{
-      var ctx=new(window.AudioContext||window.webkitAudioContext)();
-      var o=ctx.createOscillator(),g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.type='sine';
-      o.frequency.setValueAtTime(520,ctx.currentTime);
-      o.frequency.exponentialRampToValueAtTime(820,ctx.currentTime+0.08);
-      g.gain.setValueAtTime(0.15,ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.22);
-      o.start(ctx.currentTime);o.stop(ctx.currentTime+0.22);
-    }catch(e){}
+    try{var ctx=new(window.AudioContext||window.webkitAudioContext)();var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(520,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(820,ctx.currentTime+0.08);g.gain.setValueAtTime(0.13,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.2);}catch(e){}
   }
-
   function appendMsg(text,type){
-    var msgs=document.getElementById('chat-messages');
-    var el=document.createElement('div');
-    el.className='chat-msg '+type;
-    el.textContent=text;
-    msgs.appendChild(el);
-    msgs.scrollTop=msgs.scrollHeight;
-    return el;
+    var msgs=document.getElementById('chat-messages');var el=document.createElement('div');
+    el.className='chat-msg '+type;el.textContent=text;msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;return el;
   }
-
-  document.getElementById('chat-input').addEventListener('keydown',function(e){
-    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMessage();}
-  });
-
-  setTimeout(function(){
-    if(!isOpen){
-      var badge=document.getElementById('chat-badge');
-      badge.textContent='👋';badge.classList.add('show');
-      setTimeout(function(){if(!isOpen)badge.classList.remove('show');},4000);
-    }
-  },3000);
+  document.getElementById('chat-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMessage();}});
+  setTimeout(function(){if(!isOpen){var b=document.getElementById('chat-badge');b.textContent='👋';b.classList.add('show');setTimeout(function(){if(!isOpen)b.classList.remove('show');},4000);}},3000);
 })();
 
 // ── LOADER ──
 window.addEventListener('load',function(){
   var loader=document.getElementById('loader');
-  setTimeout(function(){
-    loader.classList.add('hide');
-    setTimeout(function(){loader.style.display='none';},600);
-  },2400);
+  setTimeout(function(){loader.classList.add('hide');setTimeout(function(){loader.style.display='none';},500);},2400);
 });
 </script>
 </body>

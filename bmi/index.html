@@ -457,7 +457,7 @@ function calculateBMI(){
     status='Underweight';
   }
   else if(bmi < 25){
-    status='Normal';
+    status='Normal weight';
   }
   else if(bmi < 30){
     status='Overweight';
@@ -470,6 +470,49 @@ function calculateBMI(){
     `Your BMI is ${bmi} (${status})`;
 
   icon.style.display='block';
+
+  // SAVE TO DASHBOARD
+
+  const bmiData = {
+
+    age: age,
+
+    gender: selectedGender,
+
+    height: height,
+
+    weight: weight,
+
+    bmi: bmi,
+
+    status: status,
+
+    timestamp: new Date().toLocaleString()
+
+  };
+
+  let records = [];
+
+  try{
+
+    records =
+      JSON.parse(
+        localStorage.getItem('bmiRecords')
+      ) || [];
+
+  }catch(e){
+
+    records = [];
+
+  }
+
+  records.push(bmiData);
+
+  localStorage.setItem(
+    'bmiRecords',
+    JSON.stringify(records)
+  );
+
 }
 
 function toggleHealthInfo(){

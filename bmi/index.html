@@ -1,568 +1,558 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BMI Calculator</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #2e2e2e;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      height: 100vh;
-      padding: 2rem;
-      gap: 2rem;
-      flex-wrap: wrap;
-      transition: background-color 0.5s, color 0.5s;
-    }
-    .container, .converter {
-      background-color: #3e3e3e;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(128, 0, 128, 0.6);
-      width: 300px;
-      transition: background-color 0.5s;
-    }
-    h2 {
-      text-align: center;
-      color: #b266ff;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      color: #d3bfff;
-    }
-    input, select {
-      width: 100%;
-      padding: 0.5rem;
-      border: none;
-      border-radius: 5px;
-      margin-top: 0.3rem;
-      background-color: #5e5e5e;
-      color: #fff;
-    }
-    .gender-select {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 1rem;
-    }
-    .gender-option {
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 8px;
-      background-color: #5e5e5e;
-      transition: background 0.3s;
-      color: #fff;
-      text-align: center;
-    }
-    .gender-option.selected {
-      background-color: #b266ff;
-    }
-    button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.7rem;
-      background-color: #b266ff;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #9933ff;
-    }
-    #result, #convertedHeight {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      color: #d3bfff;
-    }
-    .health-icon {
-      font-size: 2rem;
-      cursor: pointer;
-      margin-top: 0.5rem;
-    }
-    .health-info {
-      background-color: #4b3b5c;
-      padding: 1rem;
-      border-radius: 10px;
-      margin-top: 1rem;
-      display: none;
-      font-size: 0.95rem;
-      color: #f3e8ff;
-    }
-    .range-text {
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-      text-align: center;
-      color: #cfaeff;
-    }
-    #themeToggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 100;
-    }
+  <title>EcoVitals BMI Calculator</title>
 
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 28px;
-    }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 22px;
-      width: 22px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: #b266ff;
-    }
-    input:checked + .slider:before {
-      transform: translateX(22px);
-    }
-    @media screen and (max-width: 650px) {
-      body {
-        flex-direction: column;
-        align-items: center;
-        height: auto;
-      }
-    }
-  </style>
+<style>
+
+:root{
+  --primary:#7c3aed;
+  --primary-light:#a78bfa;
+}
+
+[data-theme="light"]{
+  --bg:#faf9ff;
+  --bg2:#f3f0ff;
+  --card:#ffffff;
+  --text:#2e1065;
+  --text-muted:#6d5a8a;
+  --border:rgba(124,58,237,0.12);
+  --shadow:0 8px 30px rgba(124,58,237,0.12);
+}
+
+[data-theme="dark"]{
+  --bg:#0f0a1e;
+  --bg2:#1a1035;
+  --card:rgba(42,28,70,0.85);
+  --text:#ede9fe;
+  --text-muted:#b8a7db;
+  --border:rgba(167,139,250,0.18);
+  --shadow:0 0 30px rgba(124,58,237,0.25);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  min-height:100vh;
+  padding:2rem;
+
+  font-family:'Segoe UI',sans-serif;
+
+  background:var(--bg);
+  color:var(--text);
+
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:2rem;
+  flex-wrap:wrap;
+
+  transition:0.4s;
+
+  overflow-x:hidden;
+
+  position:relative;
+}
+
+body::before,
+body::after{
+  content:'';
+  position:fixed;
+  border-radius:50%;
+  filter:blur(100px);
+  z-index:-1;
+}
+
+body::before{
+  width:450px;
+  height:450px;
+  background:rgba(167,139,250,0.22);
+  top:-140px;
+  left:-120px;
+}
+
+body::after{
+  width:350px;
+  height:350px;
+  background:rgba(124,58,237,0.18);
+  bottom:-120px;
+  right:-100px;
+}
+
+.container,
+.converter{
+  width:330px;
+
+  background:var(--card);
+
+  border:1px solid var(--border);
+
+  border-radius:24px;
+
+  padding:2rem;
+
+  backdrop-filter:blur(16px);
+
+  box-shadow:var(--shadow);
+
+  transition:0.3s;
+}
+
+.container:hover,
+.converter:hover{
+  transform:translateY(-6px);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:1.2rem;
+
+  background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-light)
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+label{
+  display:block;
+  margin-top:1rem;
+
+  color:var(--text-muted);
+
+  font-weight:600;
+}
+
+input{
+  width:100%;
+  padding:0.9rem;
+
+  margin-top:0.4rem;
+
+  border-radius:14px;
+
+  border:1px solid var(--border);
+
+  background:var(--bg2);
+
+  color:var(--text);
+
+  outline:none;
+
+  transition:0.25s;
+}
+
+input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(124,58,237,0.12);
+}
+
+button{
+  width:100%;
+
+  padding:0.95rem;
+
+  margin-top:1.2rem;
+
+  border:none;
+
+  border-radius:14px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  color:white;
+
+  background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-light)
+  );
+
+  transition:0.25s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+}
+
+.gender-select{
+  display:flex;
+  gap:0.5rem;
+  margin-top:1rem;
+}
+
+.gender-option{
+  flex:1;
+
+  padding:0.8rem;
+
+  border-radius:14px;
+
+  background:var(--bg2);
+
+  border:1px solid var(--border);
+
+  text-align:center;
+
+  cursor:pointer;
+
+  transition:0.25s;
+
+  color:var(--text-muted);
+}
+
+.gender-option.selected{
+  background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-light)
+  );
+
+  color:white;
+}
+
+#result,
+#convertedHeight{
+  margin-top:1rem;
+
+  text-align:center;
+
+  font-size:1.1rem;
+
+  font-weight:700;
+
+  color:var(--primary);
+}
+
+.range-text{
+  margin-top:0.8rem;
+
+  text-align:center;
+
+  font-size:0.88rem;
+
+  color:var(--text-muted);
+}
+
+.health-info,
+#recordsList{
+  margin-top:1rem;
+
+  background:var(--bg2);
+
+  border-radius:16px;
+
+  border:1px solid var(--border);
+
+  padding:1rem;
+}
+
+#themeToggle{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:999;
+}
+
+.theme-btn{
+  width:54px;
+  height:28px;
+
+  border:none;
+
+  border-radius:50px;
+
+  position:relative;
+
+  background:rgba(124,58,237,0.2);
+
+  cursor:pointer;
+}
+
+.theme-thumb{
+  position:absolute;
+
+  top:3px;
+  left:3px;
+
+  width:22px;
+  height:22px;
+
+  border-radius:50%;
+
+  background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-light)
+  );
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:12px;
+
+  transition:0.3s;
+}
+
+[data-theme="dark"] .theme-thumb{
+  transform:translateX(26px);
+}
+
+@media(max-width:700px){
+
+  body{
+    padding:1rem;
+  }
+
+  .container,
+  .converter{
+    width:100%;
+    max-width:400px;
+  }
+
+}
+
+</style>
 </head>
 <body>
 
-  <div id="themeToggle">
-    <label class="switch">
-      <input type="checkbox" id="themeSlider">
-      <span class="slider round"></span>
-    </label>
-  </div>
-
-  <div class="container">
-    <h2>BMI Calculator</h2>
-    <div class="gender-select">
-      <div class="gender-option" id="male" onclick="selectGender('male')">♂ Male</div>
-      <div class="gender-option" id="female" onclick="selectGender('female')">♀ Female</div>
-      <div class="gender-option" id="other" onclick="selectGender('other')">⚧ Other</div>
-    </div>
-    <label for="age">Age</label>
-    <input type="number" id="age" placeholder="Enter your age" />
-    <label for="height">Height (cm)</label>
-    <input type="number" id="height" placeholder="Enter your height" />
-    <label for="weight">Weight (kg)</label>
-    <input type="number" id="weight" placeholder="Enter your weight" />
-    <button onclick="calculateBMI()">Calculate BMI</button>
-    <div id="result"></div>
-    <div class="range-text">Underweight: &lt;18.5 | Normal: 18.5–24.9 | Overweight: 25–29.9 | Obese: ≥30</div>
-    <div id="health-icon" class="health-icon" style="display: none">
-      <button onclick="toggleHealthInfo()">Know More</button>
-    </div>
-    <div id="health-info" class="health-info"></div>
-    <button onclick="toggleRecords()">Previous Records</button>
-    <div id="recordsList" style="display:none;"></div>
-    <button onclick="clearHistory()">Clear History</button>
-  </div>
-
-  <div class="converter">
-    <h2>Feet & Inches to CM</h2>
-    <label for="feet">Feet</label>
-    <input type="number" id="feet" placeholder="Enter feet" />
-    <label for="inches">Inches</label>
-    <input type="number" id="inches" placeholder="Enter inches" />
-    <button onclick="convertToCM()">Convert</button>
-    <div id="convertedHeight"></div>
-  </div>
-
-  <script>
-    let selectedGender = null;
-    let currentHealthInfo = '';
-    const bmiRecords = [];
-
-    function selectGender(gender) {
-      selectedGender = gender;
-      document.getElementById('male').classList.remove('selected');
-      document.getElementById('female').classList.remove('selected');
-      document.getElementById('other').classList.remove('selected');
-      document.getElementById(gender).classList.add('selected');
-    }
-
-    function calculateBMI() {
-      const age = parseInt(document.getElementById('age').value);
-      const height = parseFloat(document.getElementById('height').value);
-      const weight = parseFloat(document.getElementById('weight').value);
-      const result = document.getElementById('result');
-      const icon = document.getElementById('health-icon');
-      const info = document.getElementById('health-info');
-
-      icon.style.display = 'none';
-      info.style.display = 'none';
-
-      if (!selectedGender || !age || !height || !weight) {
-        result.textContent = 'Please fill in all fields including gender.';
-        return;
-      }
-
-      const heightInMeters = height / 100;
-      const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
-
-      let status = '';
-      let emoji = '';
-
-      if (bmi < 18.5) {
-        status = 'Underweight';
-        emoji = '⚠️';
-        currentHealthInfo = 'Being underweight can be a sign of malnutrition, eating disorders, or other health issues. It’s important to maintain a balanced diet and consult a healthcare professional if needed.';
-      } else if (bmi >= 18.5 && bmi < 25) {
-        status = 'Normal weight';
-        emoji = '✅';
-        currentHealthInfo = 'You are in the healthy range! Keep up the good work with a balanced diet and regular exercise to maintain your health.';
-      } else if (bmi >= 25 && bmi < 30) {
-        status = 'Overweight';
-        emoji = '⚠️';
-        currentHealthInfo = 'Being overweight increases the risk of chronic diseases such as diabetes, heart conditions, and joint issues. Consider a healthy lifestyle with more activity and nutritious food.';
-      } else {
-        status = 'Obese';
-        emoji = '⚠️';
-        currentHealthInfo = 'Obesity is a serious health condition linked to heart disease, diabetes, and more. Professional guidance and a structured plan may help manage your weight effectively.';
-      }
-
-      result.textContent = `Your BMI is ${bmi} (${status}) ${emoji}`;
-      icon.style.display = 'inline-block';
-
-      const timestamp = new Date().toLocaleString();
-      bmiRecords.push({ timestamp, age, height, weight, bmi, status });
-      // Also persist to localStorage for dashboard
-      try {
-        let stored = JSON.parse(localStorage.getItem('bmiRecords')) || [];
-        stored.push({ timestamp, age, height, weight, bmi, status });
-        localStorage.setItem('bmiRecords', JSON.stringify(stored));
-      } catch(e) {}
-    }
-
-    function toggleRecords() {
-      const recordList = document.getElementById('recordsList');
-      if (recordList.style.display === 'none') {
-        recordList.innerHTML = '<strong>Previous Records:</strong><br><br>' +
-          bmiRecords.map(r => `Time: ${r.timestamp}<br>Age: ${r.age}, Height: ${r.height} cm, Weight: ${r.weight} kg, BMI: ${r.bmi} (${r.status})<br><br>`).join('');
-        recordList.style.display = 'block';
-      } else {
-        recordList.style.display = 'none';
-      }
-    }
-
-    function clearHistory() {
-      bmiRecords.length = 0;
-      localStorage.removeItem('bmiRecords');
-      document.getElementById('recordsList').style.display = 'none';
-    }
-
-    function toggleHealthInfo() {
-      const info = document.getElementById('health-info');
-      if (info.style.display === 'none') {
-        info.innerHTML = currentHealthInfo;
-        info.style.display = 'block';
-      } else {
-        info.style.display = 'none';
-      }
-    }
-
-    function convertToCM() {
-      const feet = parseInt(document.getElementById('feet').value);
-      const inches = parseInt(document.getElementById('inches').value);
-      const converted = document.getElementById('convertedHeight');
-
-      if (isNaN(feet) || isNaN(inches)) {
-        converted.textContent = 'Please enter both feet and inches.';
-        return;
-      }
-
-      const totalInches = (feet * 12) + inches;
-      const cm = (totalInches * 2.54).toFixed(2);
-      converted.textContent = `Height in CM: ${cm} cm`;
-    }
-
-    document.getElementById('themeSlider').addEventListener('change', (e) => {
-      if (e.target.checked) {
-        document.body.style.backgroundColor = '#121212';
-        document.body.style.color = '#fff';
-        document.querySelectorAll('.container, .converter').forEach((el) => {
-          el.style.backgroundColor = '#1a1a1a';
-        });
-      } else {
-        document.body.style.backgroundColor = '#2e2e2e';
-        document.body.style.color = '#fff';
-        document.querySelectorAll('.container, .converter').forEach((el) => {
-          el.style.backgroundColor = '#3e3e3e';
-        });
-      }
-    });
-  </script>
-
-<!-- EcoVitals AI Chatbot Widget -->
-<style>
-  #ecovitals-chat-widget {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 9999;
-    font-family: Arial, sans-serif;
-  }
-  #chat-toggle-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #7e22ce, #c084fc);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(192,132,252,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-left: auto;
-  }
-  #chat-toggle-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 30px rgba(192,132,252,0.9);
-  }
-  #chat-toggle-btn svg {
-    width: 28px;
-    height: 28px;
-    fill: #fff;
-  }
-  #chat-panel {
-    display: none;
-    flex-direction: column;
-    width: 340px;
-    height: 460px;
-    background: #2a2038;
-    border-radius: 16px;
-    border: 1px solid rgba(192,132,252,0.3);
-    box-shadow: 0 0 40px rgba(128,0,128,0.5);
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  #chat-panel.open { display: flex; }
-  #chat-header {
-    background: linear-gradient(135deg, #4a1d7e, #7e22ce);
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-  }
-  #chat-header-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #e9d5ff;
-    font-weight: bold;
-    font-size: 0.95rem;
-  }
-  #chat-header-title span.dot {
-    width: 8px;
-    height: 8px;
-    background: #a3e635;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  #chat-close-btn {
-    background: none;
-    border: none;
-    color: #c4b5fd;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    transition: color 0.2s;
-  }
-  #chat-close-btn:hover { color: #fff; }
-  #chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    scrollbar-width: thin;
-    scrollbar-color: #5b21b6 #2a2038;
-  }
-  #chat-messages::-webkit-scrollbar { width: 5px; }
-  #chat-messages::-webkit-scrollbar-track { background: #2a2038; }
-  #chat-messages::-webkit-scrollbar-thumb { background: #5b21b6; border-radius: 4px; }
-  .chat-msg {
-    max-width: 88%;
-    padding: 10px 13px;
-    border-radius: 12px;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    word-break: break-word;
-  }
-  .chat-msg.bot {
-    background: #3a2f4a;
-    color: #d1c4e9;
-    border-bottom-left-radius: 4px;
-    align-self: flex-start;
-  }
-  .chat-msg.user {
-    background: linear-gradient(135deg, #5b21b6, #7e22ce);
-    color: #f3e8ff;
-    border-bottom-right-radius: 4px;
-    align-self: flex-end;
-  }
-  .chat-msg.typing {
-    background: #3a2f4a;
-    color: #9f8cb8;
-    align-self: flex-start;
-  }
-  #chat-input-area {
-    display: flex;
-    gap: 8px;
-    padding: 12px;
-    border-top: 1px solid rgba(192,132,252,0.2);
-    flex-shrink: 0;
-    background: #221a30;
-  }
-  #chat-input {
-    flex: 1;
-    background: #3a2f4a;
-    border: 1px solid rgba(192,132,252,0.3);
-    border-radius: 10px;
-    padding: 9px 12px;
-    color: #d1c4e9;
-    font-size: 0.87rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  #chat-input:focus { border-color: #c084fc; }
-  #chat-input::placeholder { color: #7c6b99; }
-  #chat-send-btn {
-    background: linear-gradient(135deg, #7e22ce, #c084fc);
-    border: none;
-    border-radius: 10px;
-    padding: 9px 14px;
-    color: #fff;
-    font-size: 0.87rem;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    flex-shrink: 0;
-  }
-  #chat-send-btn:hover { opacity: 0.85; }
-  #chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-</style>
-
-<div id="ecovitals-chat-widget">
-  <div id="chat-panel">
-    <div id="chat-header">
-      <div id="chat-header-title">
-        <span class="dot"></span>
-        🌿 EcoVitals AI
-      </div>
-      <button id="chat-close-btn" onclick="toggleChat()">✕</button>
-    </div>
-    <div id="chat-messages">
-      <div class="chat-msg bot">Hi! I'm EcoVitals AI 👋 Ask me anything about your health, BMI, fitness, or wellness!</div>
-    </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Ask about your health..." maxlength="500" />
-      <button id="chat-send-btn" onclick="sendChatMessage()">Send</button>
-    </div>
-  </div>
-  <button id="chat-toggle-btn" onclick="toggleChat()" title="Chat with EcoVitals AI">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-    </svg>
+<div id="themeToggle">
+  <button class="theme-btn" onclick="toggleTheme()">
+    <div class="theme-thumb" id="theme-thumb">☀️</div>
   </button>
 </div>
 
+<div class="container">
+
+  <h2>BMI Calculator</h2>
+
+  <div class="gender-select">
+    <div class="gender-option" id="male" onclick="selectGender('male')">
+      ♂ Male
+    </div>
+
+    <div class="gender-option" id="female" onclick="selectGender('female')">
+      ♀ Female
+    </div>
+
+    <div class="gender-option" id="other" onclick="selectGender('other')">
+      ⚧ Other
+    </div>
+  </div>
+
+  <label>Age</label>
+  <input type="number" id="age" placeholder="Enter your age">
+
+  <label>Height (cm)</label>
+  <input type="number" id="height" placeholder="Enter your height">
+
+  <label>Weight (kg)</label>
+  <input type="number" id="weight" placeholder="Enter your weight">
+
+  <button onclick="calculateBMI()">
+    Calculate BMI
+  </button>
+
+  <div id="result"></div>
+
+  <div class="range-text">
+    Underweight: &lt;18.5 |
+    Normal: 18.5–24.9 |
+    Overweight: 25–29.9 |
+    Obese: ≥30
+  </div>
+
+  <div id="health-icon" style="display:none;">
+    <button onclick="toggleHealthInfo()">
+      Know More
+    </button>
+  </div>
+
+  <div id="health-info" class="health-info"></div>
+
+</div>
+
+<div class="converter">
+
+  <h2>Feet & Inches to CM</h2>
+
+  <label>Feet</label>
+  <input type="number" id="feet" placeholder="Enter feet">
+
+  <label>Inches</label>
+  <input type="number" id="inches" placeholder="Enter inches">
+
+  <button onclick="convertToCM()">
+    Convert
+  </button>
+
+  <div id="convertedHeight"></div>
+
+</div>
+
 <script>
-(function() {
-  var chatHistory = [];
 
-  window.toggleChat = function() {
-    var panel = document.getElementById('chat-panel');
-    panel.classList.toggle('open');
-    if (panel.classList.contains('open')) {
-      document.getElementById('chat-input').focus();
-    }
-  };
+let selectedGender = null;
+let currentHealthInfo = '';
 
-  window.sendChatMessage = async function() {
-    var input = document.getElementById('chat-input');
-    var sendBtn = document.getElementById('chat-send-btn');
-    var text = input.value.trim();
-    if (!text) return;
+function selectGender(gender){
 
-    appendMsg(text, 'user');
-    chatHistory.push({ role: 'user', content: text });
-    input.value = '';
-    sendBtn.disabled = true;
+  selectedGender = gender;
 
-    var typingEl = appendMsg('Thinking…', 'typing');
+  document
+    .querySelectorAll('.gender-option')
+    .forEach(el => el.classList.remove('selected'));
 
-    try {
-      var res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: chatHistory })
-      });
-      var data = await res.json();
-      var reply = data.reply || data.error || 'Sorry, I could not get a response. Please try again.';
-      typingEl.remove();
-      appendMsg(reply, 'bot');
-      chatHistory.push({ role: 'assistant', content: reply });
-    } catch (e) {
-      typingEl.remove();
-      appendMsg('Connection error. Please try again.', 'bot');
-    }
+  document
+    .getElementById(gender)
+    .classList.add('selected');
+}
 
-    sendBtn.disabled = false;
-    input.focus();
-  };
+function calculateBMI(){
 
-  function appendMsg(text, type) {
-    var msgs = document.getElementById('chat-messages');
-    var el = document.createElement('div');
-    el.className = 'chat-msg ' + type;
-    el.textContent = text;
-    msgs.appendChild(el);
-    msgs.scrollTop = msgs.scrollHeight;
-    return el;
+  const age =
+    parseInt(document.getElementById('age').value);
+
+  const height =
+    parseFloat(document.getElementById('height').value);
+
+  const weight =
+    parseFloat(document.getElementById('weight').value);
+
+  const result =
+    document.getElementById('result');
+
+  const icon =
+    document.getElementById('health-icon');
+
+  if(!selectedGender || !age || !height || !weight){
+
+    result.textContent =
+      'Please fill all fields.';
+
+    return;
   }
 
-  document.getElementById('chat-input').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      window.sendChatMessage();
-    }
-  });
+  const bmi =
+    (
+      weight /
+      ((height/100)*(height/100))
+    ).toFixed(2);
+
+  let status='';
+
+  if(bmi < 18.5){
+    status='Underweight';
+  }
+  else if(bmi < 25){
+    status='Normal';
+  }
+  else if(bmi < 30){
+    status='Overweight';
+  }
+  else{
+    status='Obese';
+  }
+
+  result.textContent =
+    `Your BMI is ${bmi} (${status})`;
+
+  icon.style.display='block';
+}
+
+function toggleHealthInfo(){
+
+  const info =
+    document.getElementById('health-info');
+
+  info.style.display =
+    info.style.display === 'block'
+      ? 'none'
+      : 'block';
+
+  info.innerHTML =
+    'Maintain a balanced diet, stay hydrated, exercise regularly, and sleep properly for better health.';
+}
+
+function convertToCM(){
+
+  const feet =
+    parseInt(document.getElementById('feet').value);
+
+  const inches =
+    parseInt(document.getElementById('inches').value);
+
+  const converted =
+    document.getElementById('convertedHeight');
+
+  if(isNaN(feet) || isNaN(inches)){
+
+    converted.textContent =
+      'Please enter both feet and inches.';
+
+    return;
+  }
+
+  const cm =
+    (((feet*12)+inches)*2.54).toFixed(2);
+
+  converted.textContent =
+    `Height in CM: ${cm} cm`;
+}
+
+function toggleTheme(){
+
+  const html =
+    document.documentElement;
+
+  const dark =
+    html.getAttribute('data-theme') === 'dark';
+
+  html.setAttribute(
+    'data-theme',
+    dark ? 'light' : 'dark'
+  );
+
+  document.getElementById('theme-thumb').textContent =
+    dark ? '☀️' : '🌙';
+
+  localStorage.setItem(
+    'ecovitals-theme',
+    dark ? 'light' : 'dark'
+  );
+}
+
+(function(){
+
+  const saved =
+    localStorage.getItem('ecovitals-theme')
+    || 'light';
+
+  document.documentElement.setAttribute(
+    'data-theme',
+    saved
+  );
+
+  document.getElementById('theme-thumb').textContent =
+    saved === 'dark'
+      ? '🌙'
+      : '☀️';
+
 })();
+
 </script>
+
 </body>
 </html>
